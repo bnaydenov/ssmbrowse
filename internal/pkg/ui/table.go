@@ -7,7 +7,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-// Contains information for configuring a tview table
+//TableInfo is Contains information for configuring a tview table
 type TableInfo struct {
 	Table      *tview.Table
 	Alignment  []int
@@ -15,6 +15,7 @@ type TableInfo struct {
 	Selectable bool
 }
 
+//AddTableConfigData is .......
 func AddTableConfigData(table *TableInfo, startRow int, data [][]string, color tcell.Color) {
 	AddTableData(table.Table, startRow, data, table.Alignment, table.Expansions, color, table.Selectable)
 }
@@ -23,6 +24,7 @@ const L = tview.AlignLeft
 const C = tview.AlignCenter
 const R = tview.AlignRight
 
+// AddTableData is ......
 func AddTableData(table *tview.Table, startRow int, data [][]string, alignment []int, expansions []int, color tcell.Color, selectable bool) {
 
 	if len(expansions) < len(data[0]) {
