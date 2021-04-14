@@ -18,11 +18,11 @@ func init() {
 	}))
 }
 
-func GetParemters(paramPrefix []string, startToken *string, ssmParams  []ssm.ParameterMetadata)([]ssm.ParameterMetadata, *string)  {
+func GetParemters(paramPrefix []string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string) {
 
 	client := ssm.New(sess)
-	
-    filters := []*ssm.ParameterStringFilter{
+
+	filters := []*ssm.ParameterStringFilter{
 		&ssm.ParameterStringFilter{
 			Key:    aws.String(ssm.ParametersFilterKeyName),
 			Option: aws.String("BeginsWith"),
@@ -32,8 +32,8 @@ func GetParemters(paramPrefix []string, startToken *string, ssmParams  []ssm.Par
 
 	input := &ssm.DescribeParametersInput{
 		ParameterFilters: filters,
-		MaxResults: aws.Int64(int64(MAX_COUNT)),
-		NextToken: startToken,
+		MaxResults:       aws.Int64(int64(MAX_COUNT)),
+		NextToken:        startToken,
 	}
 
 	output, err := client.DescribeParameters(input)
@@ -41,10 +41,10 @@ func GetParemters(paramPrefix []string, startToken *string, ssmParams  []ssm.Par
 		fmt.Println("error describing parameters:", err)
 	}
 
-		// Add parameters returned by SSM to ssmParams
-		for _, p := range output.Parameters {
-			ssmParams = append(ssmParams, *p)
-		}
-	
+	// Add parameters returned by SSM to ssmParams
+	for _, p := range output.Parameters {
+		ssmParams = append(ssmParams, *p)
+	}
+
 	return ssmParams, output.NextToken
 }
