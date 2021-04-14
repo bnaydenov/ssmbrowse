@@ -1,2 +1,2 @@
 # ssmbrowse
-Simple and elegant AWS SSM parameter browser for console. 
+Simple and elegant cli AWS SSM parameter browser.
