@@ -38,10 +38,10 @@ func buildClusterTable() *tview.Table {
 		SetBorderColor(tcell.ColorDarkOrange)
 
 	
-	expansions := []int{3, 1, 1, 1,1}
-	alignment := []int{ui.L, ui.L, ui.L, ui.L,ui.L}
+	expansions := []int{3, 1, 1, 1,1,1}
+	alignment := []int{ui.L, ui.L, ui.L, ui.L,ui.L,ui.L}
 
-	headers := []string{"Name", "Tier", "Type", "Description", "Version"}
+	headers := []string{"Name", "Tier", "Type", "Description", "Version","Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
 	
 	var startToken *string
@@ -66,6 +66,7 @@ func buildClusterTable() *tview.Table {
 			derefString(param.Type),
 			derefString(param.Description),
 			fmt.Sprintf("%d", *param.Version),
+			param.LastModifiedDate.Format("01-01-2021 00:00:00"),
 		}
 	}).([][]string)
 	
