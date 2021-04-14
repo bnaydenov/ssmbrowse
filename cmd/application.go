@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/bnaydenov/ssmbrowse/internal/pkg/aws"
 	"github.com/bnaydenov/ssmbrowse/internal/pkg/ui"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -36,23 +38,44 @@ func buildClusterTable() *tview.Table {
 		SetBorderColor(tcell.ColorDarkOrange)
 
 	
-	expansions := []int{3, 1, 1, 1}
-	alignment := []int{ui.L, ui.L, ui.L, ui.L}
+	expansions := []int{3, 1, 1, 1,1}
+	alignment := []int{ui.L, ui.L, ui.L, ui.L,ui.L}
 
-	headers := []string{"Name", "Tier", "Type", "Last modified"}
+	headers := []string{"Name", "Tier", "Type", "Description", "Version"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
 	
-	params := []int{1,2,3,4,5,6,7,8,9,10}
+	var startToken *string
+	var params []ssm.ParameterMetadata
 	
-	data := funk.Map(params, func(param int) []string {
+	params, _  = aws.GetParemters([]string{"/"}, startToken, params)
+    
+	// for nextToken != nil {
+	// 	params, nextToken = aws.GetParemters([]string{"/"}, nextToken, params)
+	// }
+	
+	// for _, p := range params {
+	// 	fmt.Println(*p.Name)
+	// }
+	// fmt.Println(len(params))
+	
+	
+	data := funk.Map(params, func(param ssm.ParameterMetadata) []string {
 		return []string{
-			fmt.Sprintf("Name %d", param),
-			fmt.Sprintf("Tier %d", param),
-			fmt.Sprintf("Type %d", param),
-			fmt.Sprintf("Last modified %d", param),
+			derefString(param.Name),
+			derefString(param.Tier),
+			derefString(param.Type),
+			derefString(param.Description),
+			fmt.Sprintf("%d", *param.Version),
 		}
 	}).([][]string)
+	
 	ui.AddTableData(table, 1, data, alignment, expansions, tcell.ColorWhite, true)
-
 	return table
+}
+
+func derefString(s *string) string {
+    if s != nil {
+        return *s
+    }
+    return ""
 }

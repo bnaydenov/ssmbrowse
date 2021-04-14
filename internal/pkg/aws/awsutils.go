@@ -10,7 +10,7 @@ import (
 
 var sess *session.Session
 
-const MAX_COUNT = 50
+const MAX_COUNT = 10
 
 func init() {
 	sess = session.Must(session.NewSessionWithOptions(session.Options{
