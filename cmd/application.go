@@ -55,28 +55,7 @@ func Entrypoint() {
 
 	pages = tview.NewPages()
 
-	ssmSearchPrefix = tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
-	ssmSearchPrefix.SetText("/")
-	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEnter {
-			foundParams = nil
-			startToken = nil
-			if ssmTable != nil {
-				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
-				mainGrid.RemoveItem(ssmTable)
-			}
-			foundParams, _ = awsutils.GetParemters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
-			// show error is not ssm params found with provided prefix
-			if len(foundParams) == 0 {
-				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
-				pages.SwitchToPage("error")
-				return
-			}
-			ssmTable = createResultTable(foundParams)
-			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-			app.SetFocus(ssmTable)
-		}
-	})
+	ssmSearchPrefix = createSsmSearchPrefix()
 
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
 
@@ -116,6 +95,33 @@ func Entrypoint() {
 		panic(err)
 	}
 
+}
+
+func createSsmSearchPrefix() *tview.InputField {
+
+	ssmSearchPrefix := tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
+	ssmSearchPrefix.SetText("/")
+	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
+		if key == tcell.KeyEnter {
+			foundParams = nil
+			startToken = nil
+			if ssmTable != nil {
+				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
+				mainGrid.RemoveItem(ssmTable)
+			}
+			foundParams, _ = awsutils.GetParemters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			// show error is not ssm params found with provided prefix
+			if len(foundParams) == 0 {
+				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
+				pages.SwitchToPage("error")
+				return
+			}
+			ssmTable = createResultTable(foundParams)
+			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+			app.SetFocus(ssmTable)
+		}
+	})
+	return ssmSearchPrefix
 }
 
 //createNotFoundModal is function which creates modal error box if no ssm param found
