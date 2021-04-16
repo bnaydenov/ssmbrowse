@@ -172,18 +172,16 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 	// 	}
 	// })
 
-	expansions := []int{3, 1, 1, 1, 1, 1}
+	expansions := []int{3, 1, 1, 1}
 	alignment := []int{ui.L, ui.L, ui.L, ui.L, ui.L, ui.L}
 
-	headers := []string{"Name", "Tier", "Type", "Description", "Version", "Last modified"}
+	headers := []string{"Name", "Type", "Version", "Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
     if withData {
 	data := funk.Map(foundParams, func(param ssm.Parameter) []string {
 		return []string{
 			aws.StringValue(param.Name),
 			aws.StringValue(param.Type),
-			aws.StringValue(param.Type),
-			aws.StringValue(param.DataType),
 			fmt.Sprintf("%d", *param.Version),
 			param.LastModifiedDate.Format("01-01-2021 00:00:00"),
 		}
