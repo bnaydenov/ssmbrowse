@@ -95,14 +95,8 @@ func Entrypoint() {
 
 	pages.AddPage("main", mainGrid, true, true)
 
-	notFoundModal = tview.NewModal().
-		AddButtons([]string{"OK"}).
-		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-			if buttonLabel == "OK" {
-				ssmSearchPrefix.SetText("/")
-				pages.SwitchToPage("main")
-			}
-		})
+	notFoundModal = createNotFoundModal()
+
 	pages.AddPage("error", notFoundModal, true, false)
 	pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
 
@@ -122,6 +116,19 @@ func Entrypoint() {
 		panic(err)
 	}
 
+}
+
+//createNotFoundModal is function which creates modal error box if no ssm param found
+func createNotFoundModal() *tview.Modal {
+	modal := tview.NewModal().
+		AddButtons([]string{"OK"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "OK" {
+				ssmSearchPrefix.SetText("/")
+				pages.SwitchToPage("main")
+			}
+		})
+	return modal
 }
 
 //createResultTable is creating main results table
