@@ -52,9 +52,9 @@ func Entrypoint() {
 	}
 
 	app = tview.NewApplication()
-
 	pages = tview.NewPages()
 
+	// main page
 	ssmSearchPrefix = createSsmSearchPrefix()
 
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
@@ -74,10 +74,12 @@ func Entrypoint() {
 
 	pages.AddPage("main", mainGrid, true, true)
 
+	//Error page
 	notFoundModal = createNotFoundModal()
-
 	pages.AddPage("error", notFoundModal, true, false)
-	pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
+	
+	// pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
+	
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
@@ -97,6 +99,7 @@ func Entrypoint() {
 
 }
 
+//createSsmSearchPrefix creates SsmSearchPrefix
 func createSsmSearchPrefix() *tview.InputField {
 
 	ssmSearchPrefix := tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
