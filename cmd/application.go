@@ -66,12 +66,10 @@ func Entrypoint() {
 
 	mainGrid.AddItem(ssmSearchPrefix, 0, 0, 1, 3, 0, 0, true)
 	
-
+    //crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
-	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
 	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-	// Layout for screens wider than 100 cells.
-	// grid.AddItem(main, 1, 1, 1, 1, 0, 100, false)
+	
 	mainGrid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
 
 	pages.AddPage("main", mainGrid, true, true)
@@ -137,7 +135,8 @@ func createNotFoundModal() *tview.Modal {
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
 				ssmSearchPrefix.SetText("/")
-
+                
+				//crete empty result ssmTable with header only
 				ssmTable = createResultTable(foundParams, false)
 	            mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 				

@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-    cmd.Entrypoint()
+	cmd.Entrypoint()
 }
 
 // package main
@@ -87,7 +87,7 @@ func main() {
 
 // 		return event
 // 	})
-    
+
 // 	pages = tview.NewPages()
 
 // 	pages.AddPage("main", appGrid, true, true)
