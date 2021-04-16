@@ -3,8 +3,9 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ssm"
-	"github.com/bnaydenov/ssmbrowse/internal/pkg/aws"
+	awsutils "github.com/bnaydenov/ssmbrowse/internal/pkg/awsutils"
 	"github.com/bnaydenov/ssmbrowse/internal/pkg/ui"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -22,11 +23,31 @@ var (
 	mainFlexBox    *tview.Flex
 	pages    *tview.Pages
 	ssmTable *tview.Table
-	
+	grid *tview.Grid
+	params []ssm.Parameter
+	startToken  *string
 )
 
 func Entrypoint () {
 	fmt.Println("Loading information about your AWS SSM params...")
+
+	// params,  _  = awsutils.GetParemters(aws.String("/cosmos-report-service/"), startToken, params)
+	
+	// fmt.Println(len(params))
+	// for _, p := range params {
+	// 	fmt.Println(*p.Name)
+	// }
+    // // os.Exit(0)
+	// for nextToken != nil {
+	// 	params, nextToken = aws.GetParemters([]string{"/"}, nextToken, params)
+	// }
+	
+	// for _, p := range params {
+	// 	fmt.Println(*p.Name)
+	// }
+	// fmt.Println(len(params))
+	
+
 	newPrimitive := func(text string) tview.Primitive {
 		return tview.NewTextView().
 			SetTextAlign(tview.AlignCenter).
@@ -36,14 +57,26 @@ func Entrypoint () {
 	app = tview.NewApplication()
 
 	pages = tview.NewPages()
-
-	ssmTable = buildClusterTable()
-
+	
 	paramFilter = tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
+	paramFilter.SetText("/")
 	paramFilter.SetDoneFunc(func(key tcell.Key) {
-		// if key == tcell.KeyEnter {
-			// paramFilter.SetText("XXXXX")
+		params = nil
+		startToken = nil
+		if ssmTable != nil {
+            ui.TruncTableRows(ssmTable,ssmTable.GetRowCount())
+		    grid.RemoveItem(ssmTable)
+		}
+		
+		params,  _  = awsutils.GetParemters(aws.String(paramFilter.GetText()), startToken, params)
+	    
+		
+		// fmt.Println(len(params))
+		// for _, p := range params {
+		// 	fmt.Println(*p.Name)
 		// }
+		ssmTable = buildClusterTable(params)
+		grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 		app.SetFocus(ssmTable)
 	})
 
@@ -51,7 +84,7 @@ func Entrypoint () {
 	
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
 	
-	grid := tview.NewGrid().
+	grid = tview.NewGrid().
 	SetRows(1,0,1).
 	SetColumns(0).
 	SetBorders(true)
@@ -59,7 +92,7 @@ func Entrypoint () {
 	grid.AddItem(paramFilter, 0, 0, 1, 3, 0, 0, true)
 
 	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
-     grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+    //  grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
     // Layout for screens wider than 100 cells.
     // grid.AddItem(main, 1, 1, 1, 1, 0, 100, false)
     grid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
@@ -81,14 +114,14 @@ func Entrypoint () {
 		return event
 	})
 
-	if err := app.SetRoot(pages, true).SetFocus(paramFilter).Run(); err != nil {
+	if err := app.SetRoot(pages, true).Run(); err != nil {
 		panic(err)
 	}
 
 }
 
 
-func buildClusterTable() *tview.Table {
+func buildClusterTable(ssmParams []ssm.Parameter) *tview.Table {
 
 	table := tview.NewTable().
 		SetFixed(4, 6).
@@ -101,7 +134,6 @@ func buildClusterTable() *tview.Table {
     table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTAB:
-			// Exit the application
 			app.SetFocus(paramFilter)
 			return nil
 		}
@@ -122,27 +154,12 @@ func buildClusterTable() *tview.Table {
 	headers := []string{"Name", "Tier", "Type", "Description", "Version","Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
 	
-	var startToken  *string
-	var params []ssm.ParameterMetadata
-	
-	params,  _  = aws.GetParemters([]string{"/"}, startToken, params)
-    
-	// for nextToken != nil {
-	// 	params, nextToken = aws.GetParemters([]string{"/"}, nextToken, params)
-	// }
-	
-	// for _, p := range params {
-	// 	fmt.Println(*p.Name)
-	// }
-	// fmt.Println(len(params))
-	
-	
-	data := funk.Map(params, func(param ssm.ParameterMetadata) []string {
+	data := funk.Map(params, func(param ssm.Parameter) []string {
 		return []string{
 			derefString(param.Name),
-			derefString(param.Tier),
 			derefString(param.Type),
-			derefString(param.Description),
+			derefString(param.Type),
+			derefString(param.DataType),
 			fmt.Sprintf("%d", *param.Version),
 			param.LastModifiedDate.Format("01-01-2021 00:00:00"),
 		}
