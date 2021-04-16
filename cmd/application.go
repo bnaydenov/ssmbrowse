@@ -16,17 +16,14 @@ import (
 var ssmParamTable *tview.Table
 
 var (
-	app                *tview.Application
-	paramFilter        *tview.InputField
-	paramFilterFlexBox *tview.Flex
-	ssmParamsFlexBox   *tview.Flex
-	mainFlexBox        *tview.Flex
-	pages              *tview.Pages
-	ssmTable           *tview.Table
-	grid               *tview.Grid
-	params             []ssm.Parameter
-	startToken         *string
-	modal      *tview.Modal
+	app             *tview.Application
+	ssmSearchPrefix *tview.InputField
+	pages           *tview.Pages
+	ssmTable        *tview.Table
+	mainGrid        *tview.Grid
+	foundParams     []ssm.Parameter
+	startToken      *string
+	notFoundModal   *tview.Modal
 )
 
 func Entrypoint() {
@@ -53,26 +50,26 @@ func Entrypoint() {
 			SetTextAlign(tview.AlignCenter).
 			SetText(text)
 	}
-	// box := tview.NewBox().SetBorder(true).SetTitle("ssm browser")
+
 	app = tview.NewApplication()
 
 	pages = tview.NewPages()
 
-	paramFilter = tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
-	paramFilter.SetText("/")
-	paramFilter.SetDoneFunc(func(key tcell.Key) {
+	ssmSearchPrefix = tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
+	ssmSearchPrefix.SetText("/")
+	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
-			params = nil
+			foundParams = nil
 			startToken = nil
 			if ssmTable != nil {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
-				grid.RemoveItem(ssmTable)
+				mainGrid.RemoveItem(ssmTable)
+				fmt.Println("XXXXXX")
 			}
-
-			params, _ = awsutils.GetParemters(aws.String(paramFilter.GetText()), startToken, params)
-
-			if len(params) == 0 {
-				modal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", paramFilter.GetText()))
+			foundParams, _ = awsutils.GetParemters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			// show error is not ssm params found with provided prefix
+			if len(foundParams) == 0 {
+				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
 				pages.SwitchToPage("error")
 				return
 			}
@@ -83,37 +80,37 @@ func Entrypoint() {
 		// for _, p := range params {
 		// 	fmt.Println(*p.Name)
 		// }
-		ssmTable = buildClusterTable(params)
-		grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+		ssmTable = createResultTable(foundParams)
+		mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 		app.SetFocus(ssmTable)
 	})
 
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
 
-	grid = tview.NewGrid().
+	mainGrid = tview.NewGrid().
 		SetRows(1, 0, 1).
 		SetColumns(0).
 		SetBorders(true)
 
-	grid.AddItem(paramFilter, 0, 0, 1, 3, 0, 0, true)
+	mainGrid.AddItem(ssmSearchPrefix, 0, 0, 1, 3, 0, 0, true)
 
 	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
 	//  grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 	// Layout for screens wider than 100 cells.
 	// grid.AddItem(main, 1, 1, 1, 1, 0, 100, false)
-	grid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
+	mainGrid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
 
-	pages.AddPage("main", grid, true, true)
+	pages.AddPage("main", mainGrid, true, true)
 
-	modal = tview.NewModal().
-					AddButtons([]string{"OK"}).
-					SetDoneFunc(func(buttonIndex int, buttonLabel string) {
-						if buttonLabel == "OK" {
-							paramFilter.SetText("/")
-							pages.SwitchToPage("main")
-						}
-	})
-	pages.AddPage("error", modal, true, false)
+	notFoundModal = tview.NewModal().
+		AddButtons([]string{"OK"}).
+		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+			if buttonLabel == "OK" {
+				ssmSearchPrefix.SetText("/")
+				pages.SwitchToPage("main")
+			}
+		})
+	pages.AddPage("error", notFoundModal, true, false)
 	pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -134,7 +131,8 @@ func Entrypoint() {
 
 }
 
-func buildClusterTable(ssmParams []ssm.Parameter) *tview.Table {
+//createResultTable is creating main results table
+func createResultTable(ssmParams []ssm.Parameter) *tview.Table {
 
 	table := tview.NewTable().
 		SetFixed(4, 6).
@@ -147,7 +145,7 @@ func buildClusterTable(ssmParams []ssm.Parameter) *tview.Table {
 	table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTAB:
-			app.SetFocus(paramFilter)
+			app.SetFocus(ssmSearchPrefix)
 			return nil
 		}
 		return event
@@ -165,12 +163,12 @@ func buildClusterTable(ssmParams []ssm.Parameter) *tview.Table {
 	headers := []string{"Name", "Tier", "Type", "Description", "Version", "Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
 
-	data := funk.Map(params, func(param ssm.Parameter) []string {
+	data := funk.Map(foundParams, func(param ssm.Parameter) []string {
 		return []string{
-			derefString(param.Name),
-			derefString(param.Type),
-			derefString(param.Type),
-			derefString(param.DataType),
+			aws.StringValue(param.Name),
+			aws.StringValue(param.Type),
+			aws.StringValue(param.Type),
+			aws.StringValue(param.DataType),
 			fmt.Sprintf("%d", *param.Version),
 			param.LastModifiedDate.Format("01-01-2021 00:00:00"),
 		}
@@ -178,11 +176,4 @@ func buildClusterTable(ssmParams []ssm.Parameter) *tview.Table {
 
 	ui.AddTableData(table, 1, data, alignment, expansions, tcell.ColorWhite, true)
 	return table
-}
-
-func derefString(s *string) string {
-	if s != nil {
-		return *s
-	}
-	return ""
 }
