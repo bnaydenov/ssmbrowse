@@ -65,9 +65,11 @@ func Entrypoint() {
 		SetBorders(true)
 
 	mainGrid.AddItem(ssmSearchPrefix, 0, 0, 1, 3, 0, 0, true)
+	
 
+	ssmTable = createResultTable(foundParams, false)
 	// Layout for screens narrower than 100 cells (menu and side bar are hidden).
-	//  grid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 	// Layout for screens wider than 100 cells.
 	// grid.AddItem(main, 1, 1, 1, 1, 0, 100, false)
 	mainGrid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
@@ -104,6 +106,7 @@ func createSsmSearchPrefix() *tview.InputField {
 
 	ssmSearchPrefix := tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
 	ssmSearchPrefix.SetText("/")
+
 	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
 			foundParams = nil
@@ -119,7 +122,7 @@ func createSsmSearchPrefix() *tview.InputField {
 				pages.SwitchToPage("error")
 				return
 			}
-			ssmTable = createResultTable(foundParams)
+			ssmTable = createResultTable(foundParams, true)
 			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 			app.SetFocus(ssmTable)
 		}
@@ -134,6 +137,10 @@ func createNotFoundModal() *tview.Modal {
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
 				ssmSearchPrefix.SetText("/")
+
+				ssmTable = createResultTable(foundParams, false)
+	            mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+				
 				pages.SwitchToPage("main")
 			}
 		})
@@ -141,7 +148,7 @@ func createNotFoundModal() *tview.Modal {
 }
 
 //createResultTable is creating main results table
-func createResultTable(ssmParams []ssm.Parameter) *tview.Table {
+func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 
 	table := tview.NewTable().
 		SetFixed(4, 6).
@@ -171,7 +178,7 @@ func createResultTable(ssmParams []ssm.Parameter) *tview.Table {
 
 	headers := []string{"Name", "Tier", "Type", "Description", "Version", "Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
-
+    if withData {
 	data := funk.Map(foundParams, func(param ssm.Parameter) []string {
 		return []string{
 			aws.StringValue(param.Name),
@@ -184,5 +191,6 @@ func createResultTable(ssmParams []ssm.Parameter) *tview.Table {
 	}).([][]string)
 
 	ui.AddTableData(table, 1, data, alignment, expansions, tcell.ColorWhite, true)
+	}
 	return table
 }
