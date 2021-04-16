@@ -64,7 +64,6 @@ func Entrypoint() {
 			if ssmTable != nil {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
-				fmt.Println("XXXXXX")
 			}
 			foundParams, _ = awsutils.GetParemters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			// show error is not ssm params found with provided prefix
@@ -73,16 +72,10 @@ func Entrypoint() {
 				pages.SwitchToPage("error")
 				return
 			}
-
+			ssmTable = createResultTable(foundParams)
+			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+			app.SetFocus(ssmTable)
 		}
-
-		// fmt.Println(len(params))
-		// for _, p := range params {
-		// 	fmt.Println(*p.Name)
-		// }
-		ssmTable = createResultTable(foundParams)
-		mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-		app.SetFocus(ssmTable)
 	})
 
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
