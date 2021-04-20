@@ -24,6 +24,7 @@ var (
 	foundParams     []ssm.Parameter
 	startToken      *string
 	notFoundModal   *tview.Modal
+	ssmParamForm *tview.Form
 )
 
 func Entrypoint() {
@@ -78,6 +79,23 @@ func Entrypoint() {
 	notFoundModal = createNotFoundModal()
 	pages.AddPage("error", notFoundModal, true, false)
 	
+
+
+   //SSM Param form
+   ssmParamForm = tview.NewForm().
+		AddInputField("First name", "", 20, nil, nil).
+		AddInputField("Last name", "", 20, nil, nil).
+		AddCheckbox("Age 18+", false, nil).
+		AddPasswordField("Password", "", 10, '*', nil).
+		AddButton("OK", func() {
+			
+			pages.SwitchToPage("main")
+			app.SetFocus(ssmTable)
+		})
+	ssmParamForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
+	pages.AddPage("ssmParam", ssmParamForm, true, false)
+
+
 	// pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
 	
 
@@ -165,6 +183,18 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 		}
 		return event
 	})
+	table.SetSelectedFunc(func(row int, column int) {
+		
+		ssmParam := table.GetCell(row, column).GetReference().(ssm.Parameter)
+		ssmParamForm.SetTitle(*ssmParam.Name).SetTitleAlign(tview.AlignCenter)
+		ssmParamForm.SetButtonsAlign(tview.AlignCenter)
+		ssmParamForm.SetFocus(4)
+		pages.SwitchToPage("ssmParam")
+		
+		// fmt.Println(*ssmParam.Name)
+		// table.GetCell(row, column).SetTextColor(tcell.ColorRed)
+		// table.SetSelectable(true, false)
+	})
 
 	// table.SetSelectionChangedFunc(func(row, column int) {
 	// 	if row == 10 {
@@ -178,7 +208,7 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 	headers := []string{"Name", "Type", "Version", "Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
     if withData {
-	data := funk.Map(foundParams, func(param ssm.Parameter) []string {
+	data := funk.Map(ssmParams, func(param ssm.Parameter) []string {
 		return []string{
 			aws.StringValue(param.Name),
 			aws.StringValue(param.Type),
@@ -188,6 +218,12 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 	}).([][]string)
 
 	ui.AddTableData(table, 1, data, alignment, expansions, tcell.ColorWhite, true)
+	// Add a reference to the data to column 0 in each row for easy access later on
+	for row, ssmParam := range ssmParams {
+		table.GetCell(row+1, 0).SetReference(ssmParam)
 	}
+
+	}
+
 	return table
 }
