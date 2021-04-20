@@ -18,8 +18,8 @@ func init() {
 	}))
 }
 
-//GetParemtersByPrefix is returning ssm params staring with specific prefix 
-func GetParemtersByPrefix(paramPrefix *string, startToken *string, ssmParams []ssm.Parameter) ([]ssm.Parameter, *string) {
+//GetParemetersByPrefix is returning ssm params staring with specific prefix 
+func GetParemetersByPrefix(paramPrefix *string, startToken *string, ssmParams []ssm.Parameter) ([]ssm.Parameter, *string) {
 
 	client := ssm.New(sess)
 	
@@ -56,4 +56,20 @@ func GetParemtersByPrefix(paramPrefix *string, startToken *string, ssmParams []s
 	}
 
 	return ssmParams, output.NextToken
+}
+
+//GetParameter is 
+func GetParameter(paramName string) *ssm.GetParameterOutput {
+    client := ssm.New(sess)
+
+	input := &ssm.GetParameterInput{
+    	Name: aws.String(paramName),
+		WithDecryption: aws.Bool(false),
+	}
+	output, err  := client.GetParameter(input)
+	if err != nil {
+		fmt.Println("error getting parameter:", err)
+	}
+
+	return output
 }

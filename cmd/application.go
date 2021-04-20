@@ -83,12 +83,8 @@ func Entrypoint() {
 
    //SSM Param form
    ssmParamForm = tview.NewForm().
-		AddInputField("First name", "", 20, nil, nil).
-		AddInputField("Last name", "", 20, nil, nil).
-		AddCheckbox("Age 18+", false, nil).
-		AddPasswordField("Password", "", 10, '*', nil).
 		AddButton("OK", func() {
-			
+			ssmParamForm.Clear(false)
 			pages.SwitchToPage("main")
 			app.SetFocus(ssmTable)
 		})
@@ -131,7 +127,7 @@ func createSsmSearchPrefix() *tview.InputField {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
-			foundParams, _ = awsutils.GetParemtersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			foundParams, _ = awsutils.GetParemetersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
@@ -140,6 +136,10 @@ func createSsmSearchPrefix() *tview.InputField {
 			}
 			ssmTable = createResultTable(foundParams, true)
 			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+			app.SetFocus(ssmTable)
+		}
+
+		if key == tcell.KeyTAB {
 			app.SetFocus(ssmTable)
 		}
 	})
@@ -188,6 +188,12 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.Parameter)
 		ssmParamForm.SetTitle(*ssmParam.Name).SetTitleAlign(tview.AlignCenter)
 		ssmParamForm.SetButtonsAlign(tview.AlignCenter)
+		// ssmParamDetail = awsutils.GetParameter(*ssmParam.Name)
+		ssmParamForm.AddInputField("Value:", *ssmParam.Value,100, nil, nil)
+		ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*ssmParam.Version), 100, nil, nil)
+		ssmParamForm.AddInputField("ARN:", *ssmParam.ARN, 100, nil, nil)
+		ssmParamForm.AddInputField("Last Modified Date:", ssmParam.LastModifiedDate.String() , 100, nil, nil)
+		
 		ssmParamForm.SetFocus(4)
 		pages.SwitchToPage("ssmParam")
 		
