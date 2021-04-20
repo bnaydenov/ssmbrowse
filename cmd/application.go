@@ -83,11 +83,14 @@ func Entrypoint() {
 
    //SSM Param form
    ssmParamForm = tview.NewForm().
-		AddButton("OK", func() {
+    SetFieldBackgroundColor(tcell.ColorDarkOrange).SetFieldTextColor(tcell.ColorWhite).
+    SetButtonsAlign(tview.AlignCenter).
+    AddButton("OK", func() {
 			ssmParamForm.Clear(false)
 			pages.SwitchToPage("main")
 			app.SetFocus(ssmTable)
 		})
+	
 	ssmParamForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
 	pages.AddPage("ssmParam", ssmParamForm, true, false)
 
@@ -97,12 +100,23 @@ func Entrypoint() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
-		switch event.Key() {
-		case tcell.KeyEsc:
-			// Exit the application
-			app.Stop()
-			return nil
+		if ssmParamForm.HasFocus() {
+            if event.Key() == tcell.KeyRune {
+				key := event.Rune()
+				if key == 'c' {
+					// fmt.Println("YYYYYY")
+				}
+			}
 		}
+		
+		
+		switch event.Key() {
+		   case tcell.KeyEsc:
+		   	   // Exit the application
+		   	  app.Stop()
+		   	  return nil
+		}
+		
 
 		return event
 	})
@@ -149,7 +163,7 @@ func createSsmSearchPrefix() *tview.InputField {
 //createNotFoundModal is function which creates modal error box if no ssm param found
 func createNotFoundModal() *tview.Modal {
 	modal := tview.NewModal().
-		AddButtons([]string{"OK"}).
+	AddButtons([]string{"OK"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
 				ssmSearchPrefix.SetText("/")
@@ -187,7 +201,7 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 		
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.Parameter)
 		ssmParamForm.SetTitle(*ssmParam.Name).SetTitleAlign(tview.AlignCenter)
-		ssmParamForm.SetButtonsAlign(tview.AlignCenter)
+		
 		// ssmParamDetail = awsutils.GetParameter(*ssmParam.Name)
 		ssmParamForm.AddInputField("Value:", *ssmParam.Value,100, nil, nil)
 		ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*ssmParam.Version), 100, nil, nil)
