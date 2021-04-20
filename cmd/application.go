@@ -113,7 +113,7 @@ func createSsmSearchPrefix() *tview.InputField {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
-			foundParams, _ = awsutils.GetParemters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			foundParams, _ = awsutils.GetParemtersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
