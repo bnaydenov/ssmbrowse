@@ -25,6 +25,7 @@ var (
 	startToken      *string
 	notFoundModal   *tview.Modal
 	ssmParamForm *tview.Form
+	nextToken *string
 )
 
 func Entrypoint() {
@@ -83,7 +84,7 @@ func Entrypoint() {
 
    //SSM Param form
    ssmParamForm = tview.NewForm().
-    SetFieldBackgroundColor(tcell.ColorDarkOrange).SetFieldTextColor(tcell.ColorWhite).
+    SetFieldBackgroundColor(tcell.ColorDarkOrange).SetFieldTextColor(tcell.ColorBlack).
     SetButtonsAlign(tview.AlignCenter).
     AddButton("OK", func() {
 			ssmParamForm.Clear(false)
@@ -141,7 +142,7 @@ func createSsmSearchPrefix() *tview.InputField {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
-			foundParams, _ = awsutils.GetParemetersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			foundParams, nextToken = awsutils.GetParemetersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
@@ -182,13 +183,14 @@ func createNotFoundModal() *tview.Modal {
 func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 
 	table := tview.NewTable().
-		SetFixed(4, 6).
+		SetFixed(1, 6).
 		SetSelectable(true, false)
 	table.
 		SetBorder(true).
 		SetTitle(" ⌛ SSM parameter browser...").
 		SetBorderPadding(0, 0, 1, 1).
 		SetBorderColor(tcell.ColorDarkOrange)
+
 	table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTAB:
@@ -197,6 +199,20 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 		}
 		return event
 	})
+	
+	table.SetSelectionChangedFunc(func(row, column int) {
+		currentRowCount := len(foundParams)
+		if row == len(foundParams) {
+            if nextToken != nil {
+				foundParams, nextToken = awsutils.GetParemetersByPrefix(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+				ssmTable = createResultTable(foundParams, true)
+			    mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
+			    ssmTable.Select(currentRowCount,0)
+			    app.SetFocus(ssmTable)
+			}
+		}
+	})
+
 	table.SetSelectedFunc(func(row int, column int) {
 		
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.Parameter)
