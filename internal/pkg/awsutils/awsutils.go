@@ -18,8 +18,8 @@ func init() {
 	}))
 }
 
-//GetParemetersByPrefix is returning ssm params staring with specific prefix 
-func GetParemetersByPrefix(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string) {
+//DescribeParameters is returning ssm params staring with specific prefix 
+func DescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string) {
 
 	client := ssm.New(sess)
 	
