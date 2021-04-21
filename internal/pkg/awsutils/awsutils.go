@@ -64,7 +64,7 @@ func GetParameter(paramName string) *ssm.GetParameterOutput {
 
 	input := &ssm.GetParameterInput{
     	Name: aws.String(paramName),
-		WithDecryption: aws.Bool(false),
+		WithDecryption: aws.Bool(true),
 	}
 	output, err  := client.GetParameter(input)
 	if err != nil {
