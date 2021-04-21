@@ -19,33 +19,33 @@ func init() {
 }
 
 //GetParemetersByPrefix is returning ssm params staring with specific prefix 
-func GetParemetersByPrefix(paramPrefix *string, startToken *string, ssmParams []ssm.Parameter) ([]ssm.Parameter, *string) {
+func GetParemetersByPrefix(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string) {
 
 	client := ssm.New(sess)
 	
-	// filters := []*ssm.ParameterStringFilter{
-	// 	&ssm.ParameterStringFilter{
-	// 		Key:    aws.String(ssm.ParametersFilterKeyName),
-	// 		Option: aws.String("BeginsWith"),
-	// 		Values: aws.StringSlice(paramPrefix),
-	// 	},
-	// }
+	filters := []*ssm.ParameterStringFilter{
+		&ssm.ParameterStringFilter{
+			Key:    aws.String(ssm.ParametersFilterKeyName),
+			Option: aws.String("Contains"),
+			Values: []*string{paramPrefix},
+		},
+	}
 
-	// input := &ssm.DescribeParametersInput{
-	// 	ParameterFilters: filters,
-	// 	MaxResults:       aws.Int64(int64(MAX_COUNT)),
-	// 	NextToken:        startToken,
-	// }
-    input := &ssm.GetParametersByPathInput{
-    	Path: paramPrefix,
+	input := &ssm.DescribeParametersInput{
+		ParameterFilters: filters,
 		MaxResults:       aws.Int64(int64(MAX_COUNT)),
 		NextToken:        startToken,
-		Recursive: aws.Bool(true) ,
-		WithDecryption: aws.Bool(false),
 	}
-	output, err  := client.GetParametersByPath(input)
+    // input := &ssm.GetParametersByPathInput{
+    // 	Path: paramPrefix,
+	// 	MaxResults:       aws.Int64(int64(MAX_COUNT)),
+	// 	NextToken:        startToken,
+	// 	Recursive: aws.Bool(true) ,
+	// 	WithDecryption: aws.Bool(false),
+	// }
+	// output, err  := client.GetParametersByPath(input)
 
-	// output, err := client.DescribeParameters(input)
+	output, err := client.DescribeParameters(input)
 	if err != nil {
 		fmt.Println("error getting parameters:", err)
 	}

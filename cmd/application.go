@@ -21,7 +21,7 @@ var (
 	pages           *tview.Pages
 	ssmTable        *tview.Table
 	mainGrid        *tview.Grid
-	foundParams     []ssm.Parameter
+	foundParams     []ssm.ParameterMetadata
 	startToken      *string
 	notFoundModal   *tview.Modal
 	ssmParamForm *tview.Form
@@ -180,7 +180,7 @@ func createNotFoundModal() *tview.Modal {
 }
 
 //createResultTable is creating main results table
-func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
+func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.Table {
 
 	table := tview.NewTable().
 		SetFixed(1, 6).
@@ -215,21 +215,21 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 
 	table.SetSelectedFunc(func(row int, column int) {
 		
-		ssmParam := table.GetCell(row, column).GetReference().(ssm.Parameter)
+		ssmParam := table.GetCell(row, column).GetReference().(ssm.ParameterMetadata)
 		ssmParamForm.SetTitle(*ssmParam.Name).SetTitleAlign(tview.AlignCenter)
 		
-		if *ssmParam.Type =="SecureString" {
+		// if *ssmParam.Type =="SecureString" {
 			secureSsmParam := awsutils.GetParameter(*ssmParam.Name)
 			ssmParamForm.AddInputField("Value:", *secureSsmParam.Parameter.Value ,100, nil, nil)
 		    ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*secureSsmParam.Parameter.Version), 100, nil, nil)
 		    ssmParamForm.AddInputField("ARN:", *secureSsmParam.Parameter.ARN, 100, nil, nil)
 		    ssmParamForm.AddInputField("Last Modified Date:", secureSsmParam.Parameter.LastModifiedDate.Local().String() , 100, nil, nil)
-		} else  {
-            ssmParamForm.AddInputField("Value:", *ssmParam.Value,100, nil, nil)
-		    ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*ssmParam.Version), 100, nil, nil)
-		    ssmParamForm.AddInputField("ARN:", *ssmParam.ARN, 100, nil, nil)
-		    ssmParamForm.AddInputField("Last Modified Date:", ssmParam.LastModifiedDate.Local().String() , 100, nil, nil)
-		}
+		// } else  {
+        //     ssmParamForm.AddInputField("Value:", *ssmParam.Value,100, nil, nil)
+		//     ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*ssmParam.Version), 100, nil, nil)
+		//     ssmParamForm.AddInputField("ARN:", *ssmParam.ARN, 100, nil, nil)
+		//     ssmParamForm.AddInputField("Last Modified Date:", ssmParam.LastModifiedDate.Local().String() , 100, nil, nil)
+		// }
 		
 		
 		ssmParamForm.SetFocus(4)
@@ -252,7 +252,7 @@ func createResultTable(ssmParams []ssm.Parameter, withData bool) *tview.Table {
 	headers := []string{"Name", "Type", "Version", "Last modified"}
 	ui.AddTableData(table, 0, [][]string{headers}, alignment, expansions, tcell.ColorYellow, false)
     if withData {
-	data := funk.Map(ssmParams, func(param ssm.Parameter) []string {
+	data := funk.Map(ssmParams, func(param ssm.ParameterMetadata) []string {
 		return []string{
 			aws.StringValue(param.Name),
 			aws.StringValue(param.Type),
