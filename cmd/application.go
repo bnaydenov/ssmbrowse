@@ -132,7 +132,7 @@ func Entrypoint() {
 func createSsmSearchPrefix() *tview.InputField {
 
 	ssmSearchPrefix := tview.NewInputField().SetLabel("Enter a param prefix: ").SetFieldBackgroundColor(tcell.ColorDarkOrange)
-	ssmSearchPrefix.SetText("/")
+	// ssmSearchPrefix.SetText("/")
 
 	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
@@ -153,7 +153,7 @@ func createSsmSearchPrefix() *tview.InputField {
 	
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
-				errorModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
+				errorModal.SetText(fmt.Sprintf("Can't find SSM params containing '%s'", ssmSearchPrefix.GetText()))
 				pages.SwitchToPage("error")
 				return
 			}
@@ -173,9 +173,10 @@ func createSsmSearchPrefix() *tview.InputField {
 func createErrorModal() *tview.Modal {
 	modal := tview.NewModal().
 	AddButtons([]string{"OK"}).
+	SetBackgroundColor(tcell.ColorDarkOrange).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 			if buttonLabel == "OK" {
-				ssmSearchPrefix.SetText("/")
+				// ssmSearchPrefix.SetText("/")
                 
 				//crete empty result ssmTable with header only
 				ssmTable = createResultTable(foundParams, false)
