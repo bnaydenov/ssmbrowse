@@ -77,7 +77,7 @@ func Entrypoint() {
 	pages.AddPage("main", mainGrid, true, true)
 
 	//Error page
-	errorModal = createNotFoundModal()
+	errorModal = createErrorModal()
 	pages.AddPage("error", errorModal, true, false)
 	
 
@@ -169,8 +169,8 @@ func createSsmSearchPrefix() *tview.InputField {
 	return ssmSearchPrefix
 }
 
-//createNotFoundModal is function which creates modal error box if no ssm param found
-func createNotFoundModal() *tview.Modal {
+//createErrorModal is function which creates modal error box if no ssm param found
+func createErrorModal() *tview.Modal {
 	modal := tview.NewModal().
 	AddButtons([]string{"OK"}).
 		SetDoneFunc(func(buttonIndex int, buttonLabel string) {
