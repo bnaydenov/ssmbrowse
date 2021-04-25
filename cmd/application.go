@@ -142,7 +142,15 @@ func createSsmSearchPrefix() *tview.InputField {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
-			foundParams, nextToken = awsutils.DescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			
+			var err error
+			foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			if err != nil {
+					notFoundModal.SetText(fmt.Sprintf("%s", err.Error()))
+					pages.SwitchToPage("error")
+					return
+		    }
+	
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
@@ -201,10 +209,18 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 	})
 	
 	table.SetSelectionChangedFunc(func(row, column int) {
+		
 		currentRowCount := len(foundParams)
 		if row == len(foundParams) {
             if nextToken != nil {
-				foundParams, nextToken = awsutils.DescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+                
+				var err error
+				foundParams, nextToken,  err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+				if err != nil {
+						notFoundModal.SetText(fmt.Sprintf("%s", err.Error()))
+						pages.SwitchToPage("error")
+				}
+				
 				ssmTable = createResultTable(foundParams, true)
 			    mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 			    ssmTable.Select(currentRowCount,0)

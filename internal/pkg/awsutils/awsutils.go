@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/pkg/errors"
 )
 
 var sess *session.Session
@@ -18,8 +19,8 @@ func init() {
 	}))
 }
 
-//DescribeParameters is returning ssm params staring with specific prefix 
-func DescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string) {
+//SsmDescribeParameters is returning ssm params staring with specific prefix 
+func SsmDescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string, error) {
 
 	client := ssm.New(sess)
 	
@@ -47,7 +48,8 @@ func DescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm
 
 	output, err := client.DescribeParameters(input)
 	if err != nil {
-		fmt.Println("error getting parameters:", err)
+			err = errors.Wrap(err, fmt.Sprintf("Error when trying to get ssm params containing '%s'", *paramPrefix))
+			return nil, nil, err
 	}
 
 	// // Add parameters returned by SSM to ssmParams
@@ -55,7 +57,7 @@ func DescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm
 		ssmParams = append(ssmParams, *p)
 	}
 
-	return ssmParams, output.NextToken
+	return ssmParams, output.NextToken, err
 }
 
 //GetParameter is 
