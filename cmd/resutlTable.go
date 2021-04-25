@@ -27,7 +27,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 	table.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyTAB:
-			app.SetFocus(ssmSearch)
+			app.SetFocus(ssmSearchBox)
 			return nil
 		}
 		return event
@@ -40,7 +40,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
             if nextToken != nil {
                 
 				var err error
-				foundParams, nextToken,  err = awsutils.SsmDescribeParameters(aws.String(ssmSearch.GetText()), startToken, foundParams)
+				foundParams, nextToken,  err = awsutils.SsmDescribeParameters(aws.String(ssmSearchBox.GetText()), startToken, foundParams)
 				if err != nil {
 						errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 						pages.SwitchToPage("error")

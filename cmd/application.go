@@ -13,7 +13,7 @@ var ssmParamTable *tview.Table
 
 var (
 	app             *tview.Application
-	ssmSearch *tview.InputField
+	ssmSearchBox *tview.InputField
 	pages           *tview.Pages
 	ssmTable        *tview.Table
 	mainGrid        *tview.Grid
@@ -53,7 +53,7 @@ func Entrypoint() {
 	pages = tview.NewPages()
 
 	// main page
-	ssmSearch = createSsmSearchBox()
+	ssmSearchBox = createSsmSearchBox()
 
 	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
 
@@ -62,7 +62,7 @@ func Entrypoint() {
 		SetColumns(0).
 		SetBorders(true)
 
-	mainGrid.AddItem(ssmSearch, 0, 0, 1, 3, 0, 0, true)
+	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true)
 	
     //crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
