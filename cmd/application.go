@@ -23,7 +23,7 @@ var (
 	mainGrid        *tview.Grid
 	foundParams     []ssm.ParameterMetadata
 	startToken      *string
-	notFoundModal   *tview.Modal
+	errorModal   *tview.Modal
 	ssmParamForm *tview.Form
 	nextToken *string
 )
@@ -77,7 +77,8 @@ func Entrypoint() {
 	pages.AddPage("main", mainGrid, true, true)
 
 	//Error page
-	pages.AddPage("error", notFoundModal, true, false)
+	errorModal = createNotFoundModal()
+	pages.AddPage("error", errorModal, true, false)
 	
 
 
@@ -145,14 +146,14 @@ func createSsmSearchPrefix() *tview.InputField {
 			var err error
 			foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			if err != nil {
-					notFoundModal.SetText(fmt.Sprintf("%s", err.Error()))
+					errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 					pages.SwitchToPage("error")
 					return
 		    }
 	
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
-				notFoundModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
+				errorModal.SetText(fmt.Sprintf("Can't find SSM params with preffix: %s", ssmSearchPrefix.GetText()))
 				pages.SwitchToPage("error")
 				return
 			}
@@ -216,7 +217,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 				var err error
 				foundParams, nextToken,  err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 				if err != nil {
-						notFoundModal.SetText(fmt.Sprintf("%s", err.Error()))
+						errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 						pages.SwitchToPage("error")
 				}
 				
