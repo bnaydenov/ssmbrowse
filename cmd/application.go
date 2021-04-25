@@ -77,7 +77,6 @@ func Entrypoint() {
 	pages.AddPage("main", mainGrid, true, true)
 
 	//Error page
-	notFoundModal = createNotFoundModal()
 	pages.AddPage("error", notFoundModal, true, false)
 	
 
