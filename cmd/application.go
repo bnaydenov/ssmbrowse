@@ -74,18 +74,7 @@ func Entrypoint() {
 
 
    //SSM Param form
-   ssmParamDetailsForm = tview.NewForm().
-    SetFieldBackgroundColor(tcell.ColorDarkOrange).SetFieldTextColor(tcell.ColorBlack).
-    SetButtonsAlign(tview.AlignCenter).
-    AddButton("OK", func() {
-			ssmParamDetailsForm.Clear(false)
-			pages.SwitchToPage("main")
-			app.SetFocus(ssmTable)
-		})
-	
-	ssmParamDetailsForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
-	pages.AddPage("ssmParam", ssmParamDetailsForm, true, false)
-
+   ssmParamDetailsForm = createSsmParamDetailsForm()
 
 	// pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
 	
