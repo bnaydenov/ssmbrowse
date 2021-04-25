@@ -24,15 +24,15 @@ func createSsmSearchBox() *tview.InputField {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
-			
+
 			var err error
 			foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
 			if err != nil {
-					errorModal.SetText(fmt.Sprintf("%s", err.Error()))
-					pages.SwitchToPage("error")
-					return
-		    }
-	
+				errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+				pages.SwitchToPage("error")
+				return
+			}
+
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				errorModal.SetText(fmt.Sprintf("Can't find SSM params containing '%s'", ssmSearchPrefix.GetText()))

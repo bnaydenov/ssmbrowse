@@ -9,17 +9,17 @@ import (
 )
 
 var (
-	app             *tview.Application
-	ssmParamTable *tview.Table
-	ssmSearchBox *tview.InputField
-	pages           *tview.Pages
-	ssmTable        *tview.Table
-	mainGrid        *tview.Grid
-	foundParams     []ssm.ParameterMetadata
-	startToken      *string
-	errorModal   *tview.Modal
+	app                 *tview.Application
+	ssmParamTable       *tview.Table
+	ssmSearchBox        *tview.InputField
+	pages               *tview.Pages
+	ssmTable            *tview.Table
+	mainGrid            *tview.Grid
+	foundParams         []ssm.ParameterMetadata
+	startToken          *string
+	errorModal          *tview.Modal
 	ssmParamDetailsForm *tview.Form
-	nextToken *string
+	nextToken           *string
 )
 
 func Entrypoint() {
@@ -58,11 +58,11 @@ func Entrypoint() {
 		SetBorders(true)
 
 	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true)
-	
-    //crete empty result ssmTable with header only
+
+	//crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
 	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-	
+
 	mainGrid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
 
 	pages.AddPage("main", mainGrid, true, true)
@@ -70,40 +70,30 @@ func Entrypoint() {
 	//Error modal
 	errorModal = createErrorModal()
 	pages.AddPage("error", errorModal, true, false)
-	
 
-
-   //SSM Param form
-   ssmParamDetailsForm = createSsmParamDetailsForm()
-
-	// pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
-	
+	//SSM Param details form
+	ssmParamDetailsForm = createSsmParamDetailsForm()
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
 		if ssmParamDetailsForm.HasFocus() {
-            if event.Key() == tcell.KeyRune {
+			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' {
 					// fmt.Println("YYYYYY")
 				}
 			}
 		}
-		
-		
 		switch event.Key() {
-		   case tcell.KeyEsc:
-		   	   // Exit the application
-		   	  app.Stop()
-		   	  return nil
+		case tcell.KeyEsc:
+			// Exit the application
+			app.Stop()
+			return nil
 		}
-		
-
 		return event
 	})
 
 	if err := app.SetRoot(pages, true).Run(); err != nil {
 		panic(err)
 	}
-
 }
