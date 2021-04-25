@@ -8,11 +8,9 @@ import (
 	"github.com/rivo/tview"
 )
 
-// var tviewApp *tview.Application
-var ssmParamTable *tview.Table
-
 var (
 	app             *tview.Application
+	ssmParamTable *tview.Table
 	ssmSearchBox *tview.InputField
 	pages           *tview.Pages
 	ssmTable        *tview.Table
@@ -20,7 +18,7 @@ var (
 	foundParams     []ssm.ParameterMetadata
 	startToken      *string
 	errorModal   *tview.Modal
-	ssmParamForm *tview.Form
+	ssmParamDetailsForm *tview.Form
 	nextToken *string
 )
 
@@ -52,10 +50,7 @@ func Entrypoint() {
 	app = tview.NewApplication()
 	pages = tview.NewPages()
 
-	// main page
 	ssmSearchBox = createSsmSearchBox()
-
-	// paramFilter.SetBorderColor(tcell.ColorDarkOrange).SetBorderPadding(0, 0, 1, 1)
 
 	mainGrid = tview.NewGrid().
 		SetRows(1, 0, 1).
@@ -72,24 +67,24 @@ func Entrypoint() {
 
 	pages.AddPage("main", mainGrid, true, true)
 
-	//Error page
+	//Error modal
 	errorModal = createErrorModal()
 	pages.AddPage("error", errorModal, true, false)
 	
 
 
    //SSM Param form
-   ssmParamForm = tview.NewForm().
+   ssmParamDetailsForm = tview.NewForm().
     SetFieldBackgroundColor(tcell.ColorDarkOrange).SetFieldTextColor(tcell.ColorBlack).
     SetButtonsAlign(tview.AlignCenter).
     AddButton("OK", func() {
-			ssmParamForm.Clear(false)
+			ssmParamDetailsForm.Clear(false)
 			pages.SwitchToPage("main")
 			app.SetFocus(ssmTable)
 		})
 	
-	ssmParamForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
-	pages.AddPage("ssmParam", ssmParamForm, true, false)
+	ssmParamDetailsForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
+	pages.AddPage("ssmParam", ssmParamDetailsForm, true, false)
 
 
 	// pages.SetBorderPadding(0, 0, 1, 1).SetBorderColor(tcell.ColorDarkOrange)
@@ -97,7 +92,7 @@ func Entrypoint() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
-		if ssmParamForm.HasFocus() {
+		if ssmParamDetailsForm.HasFocus() {
             if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' {
