@@ -25,7 +25,7 @@ func SsmDescribeParameters(paramPrefix *string, startToken *string, ssmParams []
 	client := ssm.New(sess)
 
 	filters := []*ssm.ParameterStringFilter{
-		&ssm.ParameterStringFilter{
+		{
 			Key:    aws.String(ssm.ParametersFilterKeyName),
 			Option: aws.String("Contains"),
 			Values: []*string{paramPrefix},

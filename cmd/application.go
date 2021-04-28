@@ -20,6 +20,9 @@ var (
 	errorModal          *tview.Modal
 	ssmParamDetailsForm *tview.Form
 	nextToken           *string
+	leftFooterItem *tview.TextView
+	centerFooterItem *tview.TextView
+	rightFooterItem *tview.TextView
 )
 
 func Entrypoint() {
@@ -41,11 +44,11 @@ func Entrypoint() {
 	// }
 	// fmt.Println(len(params))
 
-	newPrimitive := func(text string) tview.Primitive {
-		return tview.NewTextView().
-			SetTextAlign(tview.AlignCenter).
-			SetText(text)
-	}
+	// newPrimitive := func(text string) tview.Primitive {
+	// 	return tview.NewTextView().
+	// 		SetTextAlign(tview.AlignCenter).
+	// 		SetText(text)
+	// }
 
 	app = tview.NewApplication()
 	pages = tview.NewPages()
@@ -54,16 +57,25 @@ func Entrypoint() {
 
 	mainGrid = tview.NewGrid().
 		SetRows(1, 0, 1).
-		SetColumns(0).
-		SetBorders(true)
+		SetColumns(0)
 
-	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true)
-
+	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true).SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
+    // mainGrid.SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
 	//crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
 	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-
-	mainGrid.AddItem(newPrimitive("Footer"), 2, 0, 1, 3, 0, 0, false)
+     
+	leftFooterItem = tview.NewTextView()
+	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
+	updateFooterItem(leftFooterItem,"left",tview.AlignLeft)
+	
+	centerFooterItem = tview.NewTextView()
+	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
+	updateFooterItem(centerFooterItem,"center", tview.AlignCenter)
+    
+	rightFooterItem = tview.NewTextView()
+	mainGrid.AddItem(rightFooterItem, 2, 2, 1, 1, 0, 0, false)
+	updateFooterItem(rightFooterItem,"right", tview.AlignRight)
 
 	pages.AddPage("main", mainGrid, true, true)
 
