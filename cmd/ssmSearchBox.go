@@ -42,6 +42,9 @@ func createSsmSearchBox() *tview.InputField {
 			ssmTable = createResultTable(foundParams, true)
 			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 			app.SetFocus(ssmTable)
+			if nextToken != nil {
+				updateFooterItem(centerFooterItem, "There is more ssm params......." , tview.AlignCenter)
+			}
 		}
 
 		if key == tcell.KeyTAB {

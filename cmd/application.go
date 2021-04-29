@@ -25,7 +25,8 @@ var (
 	rightFooterItem *tview.TextView
 )
 
-func Entrypoint() {
+//Entrypoint is 
+func Entrypoint(buildData map[string]interface{}) {
 	fmt.Println("Loading information about your AWS SSM params...")
 
 	// params,  _  = awsutils.GetParemters(aws.String("/qldwflkjfds/"), startToken, params)
@@ -67,15 +68,15 @@ func Entrypoint() {
      
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem,"left",tview.AlignLeft)
+	updateFooterItem(leftFooterItem,"Esc/Ctrl+C=Exit",tview.AlignLeft)
 	
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
-	updateFooterItem(centerFooterItem,"center", tview.AlignCenter)
+	// updateFooterItem(centerFooterItem,"", tview.AlignCenter)
     
 	rightFooterItem = tview.NewTextView()
 	mainGrid.AddItem(rightFooterItem, 2, 2, 1, 1, 0, 0, false)
-	updateFooterItem(rightFooterItem,"right", tview.AlignRight)
+	updateFooterItem(rightFooterItem, buildData["version"].(string) , tview.AlignRight)
 
 	pages.AddPage("main", mainGrid, true, true)
 
