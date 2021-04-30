@@ -46,10 +46,11 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 					pages.SwitchToPage("error")
 				}
                 
+				// if there is no more item remove  centerFooterItem text
 				if nextToken == nil {
 					updateFooterItem(centerFooterItem,"", tview.AlignCenter, tcell.ColorWhite)
 				}
-				
+
 			 	ssmTable = createResultTable(foundParams, true)
 				mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 				ssmTable.Select(currentRowCount, 0)
