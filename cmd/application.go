@@ -16,7 +16,6 @@ var (
 	ssmTable            *tview.Table
 	mainGrid            *tview.Grid
 	foundParams         []ssm.ParameterMetadata
-	startToken          *string
 	errorModal          *tview.Modal
 	ssmParamDetailsForm *tview.Form
 	nextToken           *string

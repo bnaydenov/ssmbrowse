@@ -19,14 +19,14 @@ func createSsmSearchBox() *tview.InputField {
 	ssmSearchPrefix.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
 			foundParams = nil
-			startToken = nil
+			nextToken = nil
 			if ssmTable != nil {
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
 
 			var err error
-			foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), startToken, foundParams)
+			foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchPrefix.GetText()), nextToken, foundParams)
 			if err != nil {
 				errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 				pages.SwitchToPage("error")

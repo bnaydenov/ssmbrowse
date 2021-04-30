@@ -40,13 +40,13 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 			if nextToken != nil {
 
 				var err error
-				foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchBox.GetText()), startToken, foundParams)
+				foundParams, nextToken, err = awsutils.SsmDescribeParameters(aws.String(ssmSearchBox.GetText()), nextToken, foundParams)
 				if err != nil {
 					errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 					pages.SwitchToPage("error")
 				}
-
-				ssmTable = createResultTable(foundParams, true)
+                
+			 	ssmTable = createResultTable(foundParams, true)
 				mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 				ssmTable.Select(currentRowCount, 0)
 				app.SetFocus(ssmTable)

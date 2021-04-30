@@ -20,7 +20,7 @@ func init() {
 }
 
 //SsmDescribeParameters is returning ssm params staring with specific prefix
-func SsmDescribeParameters(paramPrefix *string, startToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string, error) {
+func SsmDescribeParameters(paramPrefix *string, nextToken *string, ssmParams []ssm.ParameterMetadata) ([]ssm.ParameterMetadata, *string, error) {
 
 	client := ssm.New(sess)
 
@@ -35,7 +35,7 @@ func SsmDescribeParameters(paramPrefix *string, startToken *string, ssmParams []
 	input := &ssm.DescribeParametersInput{
 		ParameterFilters: filters,
 		MaxResults:       aws.Int64(int64(MAX_COUNT)),
-		NextToken:        startToken,
+		NextToken:        nextToken,
 	}
 	// input := &ssm.GetParametersByPathInput{
 	// 	Path: paramPrefix,
