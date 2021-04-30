@@ -68,7 +68,7 @@ func Entrypoint(buildData map[string]interface{}) {
      
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem,"Esc/Ctrl+C=Exit",tview.AlignLeft)
+	updateFooterItem(leftFooterItem,"Esc/Ctrl+C=Exit",tview.AlignLeft, tcell.ColorWhite)
 	
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
@@ -76,7 +76,7 @@ func Entrypoint(buildData map[string]interface{}) {
     
 	rightFooterItem = tview.NewTextView()
 	mainGrid.AddItem(rightFooterItem, 2, 2, 1, 1, 0, 0, false)
-	updateFooterItem(rightFooterItem, buildData["version"].(string) , tview.AlignRight)
+	updateFooterItem(rightFooterItem, buildData["version"].(string) , tview.AlignRight, tcell.ColorBlue)
 
 	pages.AddPage("main", mainGrid, true, true)
 
