@@ -46,12 +46,16 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 					pages.SwitchToPage("error")
 				}
                 
+				if nextToken == nil {
+					updateFooterItem(centerFooterItem,"", tview.AlignCenter, tcell.ColorWhite)
+				}
+				
 			 	ssmTable = createResultTable(foundParams, true)
 				mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 				ssmTable.Select(currentRowCount, 0)
 				app.SetFocus(ssmTable)
 			}
-		}
+		} 
 	})
 
 	table.SetSelectedFunc(func(row int, column int) {
