@@ -20,7 +20,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 		SetSelectable(true, false)
 	table.
 		SetBorder(true).
-		SetTitle(" ⌛ SSM parameter browser...").
+		SetTitle("  SSM parameter browser ").
 		SetBorderPadding(0, 0, 1, 1).
 		SetBorderColor(tcell.ColorDarkOrange)
 
@@ -62,7 +62,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 	table.SetSelectedFunc(func(row int, column int) {
 
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.ParameterMetadata)
-		ssmParamDetailsForm.SetTitle(*ssmParam.Name).SetTitleAlign(tview.AlignCenter)
+		ssmParamDetailsForm.SetTitle(fmt.Sprintf(" %s ",*ssmParam.Name)).SetTitleAlign(tview.AlignCenter)
 
 		// if *ssmParam.Type =="SecureString" {
 		secureSsmParam := awsutils.GetParameter(*ssmParam.Name)

@@ -67,7 +67,7 @@ func Entrypoint(buildData map[string]interface{}) {
      
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem,"Esc/Ctrl+C=Exit",tview.AlignLeft, tcell.ColorWhite)
+	updateFooterItem(leftFooterItem,"ESC/CTRL+C=Exit | TAB=Change focus | ENTER=Details",tview.AlignLeft, tcell.ColorWhite)
 	
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
