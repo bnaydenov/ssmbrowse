@@ -1,6 +1,8 @@
 package main
 
-import "github.com/bnaydenov/ssmbrowse/cmd"
+import (
+	"github.com/bnaydenov/ssmbrowse/cmd"
+)
 
 var (
     version = "dev"

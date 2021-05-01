@@ -6,6 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go/service/sts"
 	"github.com/pkg/errors"
 )
 
@@ -74,4 +75,17 @@ func GetParameter(paramName string) *ssm.GetParameterOutput {
 	}
 
 	return output
+}
+
+//GetAwsSessionDetails is 
+func GetAwsSessionDetails() (accountID *string, region *string, err error) {
+    
+	client := sts.New(sess)	
+	output, err := client.GetCallerIdentity(&sts.GetCallerIdentityInput{})
+	if err != nil {
+		err = errors.Wrap(err, "Error when trying to current aws get caller identity")
+		return nil, nil, err
+	}
+
+    return output.Account, client.Config.Region, nil
 }

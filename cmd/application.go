@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
@@ -22,11 +20,13 @@ var (
 	leftFooterItem *tview.TextView
 	centerFooterItem *tview.TextView
 	rightFooterItem *tview.TextView
+	accountID, awsRegion *string
+	version string
 )
 
 //Entrypoint is 
 func Entrypoint(buildData map[string]interface{}) {
-	fmt.Println("Loading information about your AWS SSM params...")
+	// fmt.Println("Loading information about your AWS SSM params...")
 
 	// params,  _  = awsutils.GetParemters(aws.String("/qldwflkjfds/"), startToken, params)
 
@@ -49,6 +49,7 @@ func Entrypoint(buildData map[string]interface{}) {
 	// 		SetTextAlign(tview.AlignCenter).
 	// 		SetText(text)
 	// }
+    version = buildData["version"].(string)
 
 	app = tview.NewApplication()
 	pages = tview.NewPages()
@@ -75,7 +76,7 @@ func Entrypoint(buildData map[string]interface{}) {
     
 	rightFooterItem = tview.NewTextView()
 	mainGrid.AddItem(rightFooterItem, 2, 2, 1, 1, 0, 0, false)
-	updateFooterItem(rightFooterItem, buildData["version"].(string) , tview.AlignRight, tcell.ColorBlue)
+	updateFooterItem(rightFooterItem, version , tview.AlignRight, tcell.ColorBlue)
 
 	pages.AddPage("main", mainGrid, true, true)
 
