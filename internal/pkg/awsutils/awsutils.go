@@ -77,15 +77,15 @@ func GetParameter(paramName string) *ssm.GetParameterOutput {
 	return output
 }
 
-//GetAwsSessionDetails is 
+//GetAwsSessionDetails is
 func GetAwsSessionDetails() (accountID *string, region *string, err error) {
-    
-	client := sts.New(sess)	
+
+	client := sts.New(sess)
 	output, err := client.GetCallerIdentity(&sts.GetCallerIdentityInput{})
 	if err != nil {
 		err = errors.Wrap(err, "Error when trying to current aws get caller identity")
 		return nil, nil, err
 	}
 
-    return output.Account, client.Config.Region, nil
+	return output.Account, client.Config.Region, nil
 }

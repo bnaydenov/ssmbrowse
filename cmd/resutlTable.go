@@ -45,24 +45,24 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 					errorModal.SetText(fmt.Sprintf("%s", err.Error()))
 					pages.SwitchToPage("error")
 				}
-                
+
 				// if there is no more item remove  centerFooterItem text
 				if nextToken == nil {
-					updateFooterItem(centerFooterItem,"", tview.AlignCenter, tcell.ColorWhite)
+					updateFooterItem(centerFooterItem, "", tview.AlignCenter, tcell.ColorWhite)
 				}
 
-			 	ssmTable = createResultTable(foundParams, true)
+				ssmTable = createResultTable(foundParams, true)
 				mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
 				ssmTable.Select(currentRowCount, 0)
 				app.SetFocus(ssmTable)
 			}
-		} 
+		}
 	})
 
 	table.SetSelectedFunc(func(row int, column int) {
 
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.ParameterMetadata)
-		ssmParamDetailsForm.SetTitle(fmt.Sprintf(" %s ",*ssmParam.Name)).SetTitleAlign(tview.AlignCenter)
+		ssmParamDetailsForm.SetTitle(fmt.Sprintf(" %s ", *ssmParam.Name)).SetTitleAlign(tview.AlignCenter)
 
 		// if *ssmParam.Type =="SecureString" {
 		secureSsmParam := awsutils.GetParameter(*ssmParam.Name)

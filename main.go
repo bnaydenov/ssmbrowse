@@ -5,18 +5,18 @@ import (
 )
 
 var (
-    version = "dev"
-    commit  = "none"
-    date    = "unknown"
-    builtBy = "unknown"
+	version = "dev"
+	commit  = "none"
+	date    = "unknown"
+	builtBy = "unknown"
 )
 
 func main() {
-	
+
 	buildData := map[string]interface{}{
 		"version": version,
-		"commit": commit,
-		"date": date,
+		"commit":  commit,
+		"date":    date,
 		"builtBy": builtBy,
 	}
 

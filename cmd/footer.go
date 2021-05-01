@@ -9,7 +9,7 @@ import (
 )
 
 func updateFooterItem(item *tview.TextView, text string, alignment int, color tcell.Color) {
-    item.SetText(text).SetTextAlign(alignment).SetTextColor(color)
+	item.SetText(text).SetTextAlign(alignment).SetTextColor(color)
 }
 
 func updateRightFooter() {
@@ -19,5 +19,5 @@ func updateRightFooter() {
 		pages.SwitchToPage("error")
 		return
 	}
-	 updateFooterItem(rightFooterItem,fmt.Sprintf("AWS ID:%s | Region:%s | ver:%s", *accountID, *awsRegion, version), tview.AlignRight, tcell.ColorBlue)
+	updateFooterItem(rightFooterItem, fmt.Sprintf("AWS ID:%s | Region:%s | ver:%s", *accountID, *awsRegion, version), tview.AlignRight, tcell.ColorBlue)
 }

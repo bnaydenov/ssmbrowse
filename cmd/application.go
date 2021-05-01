@@ -7,24 +7,24 @@ import (
 )
 
 var (
-	app                 *tview.Application
-	ssmParamTable       *tview.Table
-	ssmSearchBox        *tview.InputField
-	pages               *tview.Pages
-	ssmTable            *tview.Table
-	mainGrid            *tview.Grid
-	foundParams         []ssm.ParameterMetadata
-	errorModal          *tview.Modal
-	ssmParamDetailsForm *tview.Form
-	nextToken           *string
-	leftFooterItem *tview.TextView
-	centerFooterItem *tview.TextView
-	rightFooterItem *tview.TextView
+	app                  *tview.Application
+	ssmParamTable        *tview.Table
+	ssmSearchBox         *tview.InputField
+	pages                *tview.Pages
+	ssmTable             *tview.Table
+	mainGrid             *tview.Grid
+	foundParams          []ssm.ParameterMetadata
+	errorModal           *tview.Modal
+	ssmParamDetailsForm  *tview.Form
+	nextToken            *string
+	leftFooterItem       *tview.TextView
+	centerFooterItem     *tview.TextView
+	rightFooterItem      *tview.TextView
 	accountID, awsRegion *string
-	version string
+	version              string
 )
 
-//Entrypoint is 
+//Entrypoint is
 func Entrypoint(buildData map[string]interface{}) {
 	// fmt.Println("Loading information about your AWS SSM params...")
 
@@ -49,7 +49,7 @@ func Entrypoint(buildData map[string]interface{}) {
 	// 		SetTextAlign(tview.AlignCenter).
 	// 		SetText(text)
 	// }
-    version = buildData["version"].(string)
+	version = buildData["version"].(string)
 
 	app = tview.NewApplication()
 	pages = tview.NewPages()
@@ -61,22 +61,22 @@ func Entrypoint(buildData map[string]interface{}) {
 		SetColumns(0)
 
 	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true).SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
-    // mainGrid.SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
+	// mainGrid.SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
 	//crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
 	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-     
+
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem,"ESC/CTRL+C=Exit | TAB=Change focus | ENTER=Details",tview.AlignLeft, tcell.ColorWhite)
-	
+	updateFooterItem(leftFooterItem, "ESC/CTRL+C=Exit | TAB=Change focus | ENTER=Details", tview.AlignLeft, tcell.ColorWhite)
+
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
 	// updateFooterItem(centerFooterItem,"", tview.AlignCenter)
-    
+
 	rightFooterItem = tview.NewTextView()
 	mainGrid.AddItem(rightFooterItem, 2, 2, 1, 1, 0, 0, false)
-	updateFooterItem(rightFooterItem, version , tview.AlignRight, tcell.ColorBlue)
+	updateFooterItem(rightFooterItem, version, tview.AlignRight, tcell.ColorBlue)
 
 	pages.AddPage("main", mainGrid, true, true)
 

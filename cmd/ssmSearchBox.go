@@ -32,7 +32,7 @@ func createSsmSearchBox() *tview.InputField {
 				pages.SwitchToPage("error")
 				return
 			}
-         
+
 			// show error is not ssm params found with provided prefix
 			if len(foundParams) == 0 {
 				errorModal.SetText(fmt.Sprintf("Can't find SSM params containing '%s'", ssmSearchPrefix.GetText()))
@@ -41,14 +41,14 @@ func createSsmSearchBox() *tview.InputField {
 			}
 			ssmTable = createResultTable(foundParams, true)
 			mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
-			
+
 			if accountID == nil && awsRegion == nil {
 				updateRightFooter()
-		    }
+			}
 
 			app.SetFocus(ssmTable)
 			if nextToken != nil {
-				updateFooterItem(centerFooterItem, "There is more results to be shown, please scroll down......." , tview.AlignCenter, tcell.ColorDarkOrange)
+				updateFooterItem(centerFooterItem, "There is more results to be shown, please scroll down.......", tview.AlignCenter, tcell.ColorDarkOrange)
 			}
 		}
 
