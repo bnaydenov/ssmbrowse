@@ -16,9 +16,8 @@ func createSsmParamDetailsForm() *tview.Form {
 			pages.SwitchToPage("main")
 			app.SetFocus(ssmTable)
 		})
-
+     
 	ssmParamDetailsForm.SetBorder(true).SetTitle("Set ssm parm name as title").SetTitleAlign(tview.AlignLeft)
-	pages.AddPage("ssmParam", ssmParamDetailsForm, true, false)
 
 	return ssmParamDetailsForm
 }

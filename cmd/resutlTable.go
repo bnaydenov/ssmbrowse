@@ -66,6 +66,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 
 		// if *ssmParam.Type =="SecureString" {
 		secureSsmParam := awsutils.GetParameter(*ssmParam.Name)
+		
 		ssmParamDetailsForm.AddInputField("Value:", *secureSsmParam.Parameter.Value, 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("Version:", fmt.Sprintf("%d", *secureSsmParam.Parameter.Version), 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("ARN:", *secureSsmParam.Parameter.ARN, 100, nil, nil)
@@ -76,8 +77,7 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 		//     ssmParamForm.AddInputField("ARN:", *ssmParam.ARN, 100, nil, nil)
 		//     ssmParamForm.AddInputField("Last Modified Date:", ssmParam.LastModifiedDate.Local().String() , 100, nil, nil)
 		// }
-
-		ssmParamDetailsForm.SetFocus(4)
+        ssmParamDetailsForm.SetFocus(4)
 		pages.SwitchToPage("ssmParam")
 
 		// fmt.Println(*ssmParam.Name)
