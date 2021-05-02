@@ -87,9 +87,12 @@ func Entrypoint(buildData map[string]interface{}) {
 	//SSM Param details form
 	ssmParamDetailsForm = createSsmParamDetailsForm()
     
-	ssmParamGrid = tview.NewGrid().SetRows(0,0,0,0,0).SetColumns(0,0,0,0,0)
-	ssmParamGrid.AddItem(ssmParamDetailsForm,1,1,3,3,0,0,true)
-	pages.AddPage("ssmParam",ssmParamGrid , true, false)
+	ssmParamGrid = tview.NewGrid().SetRows(0,0,0,0,1).SetColumns(0,0,0,0,0)
+	ssmParamGrid.AddItem(ssmParamDetailsForm,1,1,2,3,0,0,true)
+
+	// ssmParamFooterItemLeft := tview.NewTextView().SetText("footer item left").SetTextAlign(tview.AlignLeft)
+	// ssmParamGrid.AddItem(ssmParamFooterItemLeft,4,0,1,1,0,0,false)
+	// pages.AddPage("ssmParam",ssmParamGrid , true, false)
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
