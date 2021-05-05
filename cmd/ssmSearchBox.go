@@ -48,7 +48,7 @@ func createSsmSearchBox() *tview.InputField {
 
 			app.SetFocus(ssmTable)
 			if nextToken != nil {
-				updateFooterItem(centerFooterItem, "There is more results to be shown, please scroll down.......", tview.AlignCenter, tcell.ColorDarkOrange)
+				updateFooterItem(centerFooterItem, "There are more results to be shown, please scroll down.......", tview.AlignCenter, tcell.ColorDarkOrange)
 			}
 		}
 
