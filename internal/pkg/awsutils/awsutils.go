@@ -54,19 +54,21 @@ func SsmDescribeParameters(paramPrefix *string, nextToken *string, ssmParams []s
 }
 
 //GetParameter is
-func GetParameter(paramName string) *ssm.GetParameterOutput {
+func GetParameter(paramName string) (*ssm.GetParameterOutput, error) {
 	client := ssm.New(sess)
 
 	input := &ssm.GetParameterInput{
 		Name:           aws.String(paramName),
 		WithDecryption: aws.Bool(true),
 	}
+	
 	output, err := client.GetParameter(input)
 	if err != nil {
-		fmt.Println("error getting parameter:", err)
+		err = errors.Wrap(err, fmt.Sprintf("Error when trying to get ssm param: %s", paramName))
+		return nil, err
 	}
 
-	return output
+	return output, err
 }
 
 //GetAwsSessionDetails is

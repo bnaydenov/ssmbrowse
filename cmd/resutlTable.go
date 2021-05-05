@@ -64,8 +64,11 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 		ssmParam := table.GetCell(row, column).GetReference().(ssm.ParameterMetadata)
 		ssmParamDetailsForm.SetTitle(fmt.Sprintf(" %s ", *ssmParam.Name)).SetTitleAlign(tview.AlignCenter)
 
-		// if *ssmParam.Type =="SecureString" {
-		secureSsmParam := awsutils.GetParameter(*ssmParam.Name)
+		secureSsmParam, err := awsutils.GetParameter(*ssmParam.Name)
+		if err != nil {
+			errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+			pages.SwitchToPage("error")
+		}
 
 		ssmParamDetailsForm.AddInputField("Value:", *secureSsmParam.Parameter.Value, 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("Version:", fmt.Sprintf("%d", *secureSsmParam.Parameter.Version), 100, nil, nil)
