@@ -66,30 +66,16 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 
 		// if *ssmParam.Type =="SecureString" {
 		secureSsmParam := awsutils.GetParameter(*ssmParam.Name)
-		
+
 		ssmParamDetailsForm.AddInputField("Value:", *secureSsmParam.Parameter.Value, 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("Version:", fmt.Sprintf("%d", *secureSsmParam.Parameter.Version), 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("ARN:", *secureSsmParam.Parameter.ARN, 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("Last Modified Date:", secureSsmParam.Parameter.LastModifiedDate.Local().String(), 100, nil, nil)
-		// } else  {
-		//     ssmParamForm.AddInputField("Value:", *ssmParam.Value,100, nil, nil)
-		//     ssmParamForm.AddInputField("Version:", fmt.Sprintf("%d",*ssmParam.Version), 100, nil, nil)
-		//     ssmParamForm.AddInputField("ARN:", *ssmParam.ARN, 100, nil, nil)
-		//     ssmParamForm.AddInputField("Last Modified Date:", ssmParam.LastModifiedDate.Local().String() , 100, nil, nil)
-		// }
+		
         ssmParamDetailsForm.SetFocus(4)
 		pages.SwitchToPage("ssmParam")
 
-		// fmt.Println(*ssmParam.Name)
-		// table.GetCell(row, column).SetTextColor(tcell.ColorRed)
-		// table.SetSelectable(true, false)
 	})
-
-	// table.SetSelectionChangedFunc(func(row, column int) {
-	// 	if row == 10 {
-	// 		SetBorderColor(tcell.ColorDarkRed)
-	// 	}
-	// })
 
 	expansions := []int{3, 1, 1, 1}
 	alignment := []int{ui.L, ui.L, ui.L, ui.L, ui.L, ui.L}

@@ -26,29 +26,7 @@ var (
 
 //Entrypoint is
 func Entrypoint(buildData map[string]interface{}) {
-	// fmt.Println("Loading information about your AWS SSM params...")
-
-	// params,  _  = awsutils.GetParemters(aws.String("/qldwflkjfds/"), startToken, params)
-
-	// fmt.Println(len(params))
-	// for _, p := range params {
-	// 	fmt.Println(*p.Name)
-	// }
-	// os.Exit(0)
-	// for nextToken != nil {
-	// 	params, nextToken = aws.GetParemters([]string{"/"}, nextToken, params)
-	// }
-
-	// for _, p := range params {
-	// 	fmt.Println(*p.Name)
-	// }
-	// fmt.Println(len(params))
-
-	// newPrimitive := func(text string) tview.Primitive {
-	// 	return tview.NewTextView().
-	// 		SetTextAlign(tview.AlignCenter).
-	// 		SetText(text)
-	// }
+	
 	version = buildData["version"].(string)
 
 	app = tview.NewApplication()
@@ -61,7 +39,7 @@ func Entrypoint(buildData map[string]interface{}) {
 		SetColumns(0)
 
 	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true).SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
-	// mainGrid.SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
+	
 	//crete empty result ssmTable with header only
 	ssmTable = createResultTable(foundParams, false)
 	mainGrid.AddItem(ssmTable, 1, 0, 1, 3, 0, 0, false)
@@ -100,7 +78,7 @@ func Entrypoint(buildData map[string]interface{}) {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' {
-					// fmt.Println("YYYYYY")
+					// fmt.Println("c key is pressed")
 				}
 			}
 		}

@@ -38,15 +38,7 @@ func SsmDescribeParameters(paramPrefix *string, nextToken *string, ssmParams []s
 		MaxResults:       aws.Int64(int64(MAX_COUNT)),
 		NextToken:        nextToken,
 	}
-	// input := &ssm.GetParametersByPathInput{
-	// 	Path: paramPrefix,
-	// 	MaxResults:       aws.Int64(int64(MAX_COUNT)),
-	// 	NextToken:        startToken,
-	// 	Recursive: aws.Bool(true) ,
-	// 	WithDecryption: aws.Bool(false),
-	// }
-	// output, err  := client.GetParametersByPath(input)
-
+	
 	output, err := client.DescribeParameters(input)
 	if err != nil {
 		err = errors.Wrap(err, fmt.Sprintf("Error when trying to get ssm params containing '%s'", *paramPrefix))
