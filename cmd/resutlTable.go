@@ -71,8 +71,8 @@ func createResultTable(ssmParams []ssm.ParameterMetadata, withData bool) *tview.
 		ssmParamDetailsForm.AddInputField("Version:", fmt.Sprintf("%d", *secureSsmParam.Parameter.Version), 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("ARN:", *secureSsmParam.Parameter.ARN, 100, nil, nil)
 		ssmParamDetailsForm.AddInputField("Last Modified Date:", secureSsmParam.Parameter.LastModifiedDate.Local().String(), 100, nil, nil)
-		
-        ssmParamDetailsForm.SetFocus(4)
+
+		ssmParamDetailsForm.SetFocus(4)
 		pages.SwitchToPage("ssmParam")
 
 	})
