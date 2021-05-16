@@ -9,6 +9,14 @@ before:
 builds:
   - env:
       - CGO_ENABLED=0
+    # Custom ldflags templates.
+    # Default is `# Custom ldflags templates.
+    # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
+    ldflags:
+     - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
+    ldflags:
+     - -s -w -X main.build={{.Version}}
+     - ./usemsan=-msan  
     goos:
       - linux
       - windows
@@ -20,6 +28,20 @@ archives:
       windows: Windows
       386: i386
       amd64: x86_64
+    # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
+    # If format is `binary`, no archives are created and the binaries are instead
+    # uploaded directly.
+    # Default is `tar.gz`.
+    format: zip
+
+    # Archive name template.
+    # Defaults:
+    # - if format is `tar.gz`, `tar.xz`, `gz` or `zip`:
+    #   - `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    # - if format is `binary`:
+    #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
 checksum:
   name_template: 'checksums.txt'
 snapshot:
