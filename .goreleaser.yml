@@ -36,7 +36,6 @@ archives:
       darwin: Darwin
       linux: Linux
       windows: Windows
-      386: i386
       amd64: x86_64
     # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
     # If format is `binary`, no archives are created and the binaries are instead
@@ -78,9 +77,8 @@ nfpms:
     # Default is empty.
     replacements:
       amd64: 64-bit
-      386: 32-bit
       darwin: macOS
-      linux: Tux
+      linux: Linux
 
     # Your app's vendor.
     # Default is empty.
@@ -113,7 +111,7 @@ checksum:
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
-  sort: asc
+  sort: desc
   filters:
     exclude:
       - '^docs:'
