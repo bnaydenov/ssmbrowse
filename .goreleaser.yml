@@ -108,6 +108,7 @@ nfpms:
 # Homebrew
 brews:
   - name: ssmbrowse
+    license: "MIT"
     tap:
       owner: bnaydenov
       name: homebrew-ssmbrowse
