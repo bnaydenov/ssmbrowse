@@ -124,7 +124,7 @@ brews:
 checksum:
   name_template: 'checksums.txt'
 signs:
-  - artifacts: checksum
+  - artifacts: all
 snapshot:
   name_template: "{{ .Tag }}-next"
 changelog:
