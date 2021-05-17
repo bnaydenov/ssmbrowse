@@ -89,7 +89,7 @@ nfpms:
 
     # Your app's maintainer (probably you).
     # Default is empty.
-    maintainer: Bogdan Naydenov <bnaydenov@pm.me>
+    maintainer: Bogdan Naydenov <bnaydenov@gmail.com>
 
     # Your app's description.
     # Default is empty.
@@ -114,13 +114,10 @@ brews:
       name: homebrew-ssmbrowse
     commit_author:
       name: Bogdan Naydenov
-      email: bnaydenov@pm.me  
+      email: bnaydenov@gmail.com
     folder: Formula
     homepage: https://github.com/bnaydenov/ssmbrowse
     description: Simple and elegant cli AWS SSM parameter browser.
-    # test: |
-    #   system "k9s version"
-
 checksum:
   name_template: 'checksums.txt'
 snapshot:
