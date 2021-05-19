@@ -12,6 +12,7 @@ import (
 
 var sess *session.Session
 
+//MAX_COUNT is result to return in single API call
 const MAX_COUNT = 30
 
 func init() {
@@ -61,7 +62,7 @@ func GetParameter(paramName string) (*ssm.GetParameterOutput, error) {
 		Name:           aws.String(paramName),
 		WithDecryption: aws.Bool(true),
 	}
-	
+
 	output, err := client.GetParameter(input)
 	if err != nil {
 		err = errors.Wrap(err, fmt.Sprintf("Error when trying to get ssm param: %s", paramName))

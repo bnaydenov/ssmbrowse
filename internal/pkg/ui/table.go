@@ -20,8 +20,13 @@ func AddTableConfigData(table *TableInfo, startRow int, data [][]string, color t
 	AddTableData(table.Table, startRow, data, table.Alignment, table.Expansions, color, table.Selectable)
 }
 
+// L - Left align
 const L = tview.AlignLeft
+
+// C - Center align
 const C = tview.AlignCenter
+
+// R - Right align
 const R = tview.AlignRight
 
 // AddTableData is ......
@@ -46,12 +51,14 @@ func AddTableData(table *tview.Table, startRow int, data [][]string, alignment [
 	}
 }
 
+//SetColumnStyle style for column
 func SetColumnStyle(table *tview.Table, col int, rowStart int, style tcell.Style) {
 	for row := rowStart; row <= table.GetRowCount()-1; row++ {
 		table.GetCell(row, col).SetStyle(style)
 	}
 }
 
+// TruncTableRows - truncate  all row from table
 func TruncTableRows(table *tview.Table, maxRows int) {
 	for table.GetRowCount() > maxRows {
 		table.RemoveRow(maxRows)
