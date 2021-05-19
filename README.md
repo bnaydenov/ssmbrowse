@@ -5,5 +5,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/bnaydenov/ssmbrowse)](https://github.com/bnaydenov/ssmbrowse/issues)
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/bnaydenov/ssmbrowse)
 ![GitHub all releases](https://img.shields.io/github/downloads/bnaydenov/ssmbrowse/total)
+![Go Report Card](https://goreportcard.com/badge/github.com/bnaydenov/ssmbrowse/tree/0.1.0)(https://goreportcard.com/badge/github.com/bnaydenov/ssmbrowse/tree/0.1.0)
+
 
 Simple and elegant cli AWS SSM parameter browser.
