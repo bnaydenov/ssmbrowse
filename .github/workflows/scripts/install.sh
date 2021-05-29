@@ -7,7 +7,7 @@
 #     3. ./install.sh $HOME/usr/bin
 #     4. BINDIR=$HOME/usr/bin ./install.sh
 #
-# Default BINDIR=/usr/bin
+# Default BINDIR=/usr/local/bin
 
 set -euf
 
@@ -15,7 +15,7 @@ if [ -n "${DEBUG-}" ]; then
     set -x
 fi
 
-: "${BINDIR:=/usr/bin}"
+: "${BINDIR:=/usr/local/bin}"
 
 if [ $# -gt 0 ]; then
   BINDIR=$1
@@ -42,10 +42,10 @@ machine=$(uname -m)
 
 case $(uname -s) in
     Linux)
-        os="Linux"
+        os="linux"
         ;;
     Darwin)
-        os="macOS"
+        os="macos"
         ;;
     *)
         printf "OS not supported\n"
@@ -54,19 +54,19 @@ case $(uname -s) in
 esac
 
 printf "Fetching latest version\n"
-latest="$(curl -sL 'https://api.github.com/repos/profclems/glab/releases/latest' | grep 'tag_name' | grep --only 'v[0-9\.]\+' | cut -c 2-)"
-tempFolder="/tmp/glab_v${latest}"
+latest="$(curl -sL 'https://api.github.com/repos/bnaydenov/ssmbrowse/releases/latest' | grep 'tag_name' | grep --only 'v[0-9\.]\+' | cut -c 2-)"
+tempFolder="/tmp/ssmbrowse_v${latest}"
 
 printf -- "Found version %s\n" "${latest}"
 
 mkdir -p "${tempFolder}" 2> /dev/null
-printf -- "Downloading glab_%s_%s_%s.tar.gz\n" "${latest}" "${os}" "${machine}"
-curl -sL "https://github.com/profclems/glab/releases/download/v${latest}/glab_${latest}_${os}_${machine}.tar.gz" | tar -C "${tempFolder}" -xzf -
+printf -- "Downloading ssmbrowse_%s_%s_%s.zip\n" "${latest}" "${os}" "${machine}"
+curl -sL "https://github.com/profclems/bnaydenov/ssmbrowse/download/v${latest}/ssmbrowse_${latest}_${os}_${machine}.zip" | tar -C "${tempFolder}" -xzf -
 
 printf -- "Installing...\n"
-install -m755 "${tempFolder}/bin/glab" "${BINDIR}/glab"
+install -m755 "${tempFolder}/bin/ssmbrowse" "${BINDIR}/ssmbrowse"
 
 printf "Cleaning up temp files\n"
 rm -rf "${tempFolder}"
 
-printf -- "Successfully installed glab into %s/\n" "${BINDIR}"
+printf -- "Successfully installed ssmbrowse into %s/\n" "${BINDIR}"

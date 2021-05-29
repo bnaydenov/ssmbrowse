@@ -33,9 +33,9 @@ builds:
         goarch: 386  
 archives:
   - replacements:
-      darwin: Darwin
-      linux: Linux
-      windows: Windows
+      darwin: macos
+      linux: linux
+      windows: windows
       amd64: x86_64
     # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
     # If format is `binary`, no archives are created and the binaries are instead
@@ -50,6 +50,16 @@ archives:
     # - if format is `binary`:
     #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    # Additional files/template/globs you want to add to the archive.
+    # Defaults are any files matching `LICENCE*`, `LICENSE*`,
+    # `README*` and `CHANGELOG*` (case-insensitive).
+    files:
+      # - LICENSE.txt
+      # - README_{{.Os}}.md
+      # - CHANGELOG.md
+      # - docs/*
+      # - design/*.png
+      # - templates/**/*
 
 nfpms:
   # note that this is an array of nfpm configs
@@ -76,9 +86,9 @@ nfpms:
     # Values are the respective replacements.
     # Default is empty.
     replacements:
-      amd64: 64-bit
-      darwin: macOS
-      linux: Linux
+      amd64: 64bit
+      darwin: macos
+      linux: linux
 
     # Your app's vendor.
     # Default is empty.
