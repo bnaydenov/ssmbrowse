@@ -9,3 +9,4 @@
 
 
 Simple and elegant cli AWS SSM parameter browser.
+![](assets/ssmbrowse-logo-transparent.png)
