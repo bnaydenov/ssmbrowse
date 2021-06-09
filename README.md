@@ -10,4 +10,30 @@
 
 Simple and elegant cli AWS SSM parameter browser.
 
-<img align="left" src="assets/ssmbrowse-logo-transparent.png">
+<img align="left" src="assets/ssmbrowse-logo-transparent.png" style="float:  unset;">
+
+
+
+## Install on Macos with brew: 
+```bash
+brew tap bnaydenov/ssmbrowse
+brew install ssmbrowse
+```
+
+`ssmbrowse` uses AWS Golang SDK to access AWS. The AWS SDK for Go requires credentials (an access key and secret access key) to sign requests to AWS. You can specify your credentials in several different locations, depending on your particular use case. 
+
+The default provider chain looks for credentials in the following order:
+1. Environment variables.
+
+2. Shared credentials file.
+3. If your application is running on an Amazon EC2 instance, IAM role for Amazon EC2.
+
+The SDK detects and uses the built-in providers automatically, without requiring manual configurations. For example, if you use IAM roles for Amazon EC2 instances, `ssmbrowse` automatically use the instance’s credentials. You don’t need to manually configure credentials in your application.
+
+### Shared Credentials File
+A credential file is a plaintext file that contains your access keys. The file must be on the same machine on which you’re running your application. The file must be named credentials and located in the .aws/ folder in your home directory. The home directory can vary by operating system. In Windows, you can refer to your home directory by using the environment variable %UserProfile%. In Unix-like systems, you can use the environment variable $HOME or ~ (tilde).
+
+If you already use this file for other SDKs and tools (like the AWS CLI), you don’t need to change anything to use the files in this SDK. If you use different credentials for different tools or applications, you can use profiles to configure multiple access keys in the same configuration file.
+
+ [More information how to configure credential check AWS docs here](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html)
+
