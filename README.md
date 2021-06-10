@@ -13,6 +13,8 @@ Simple and elegant cli AWS SSM parameter browser.
 <img align="left" src="assets/ssmbrowse-logo-transparent.png" style="float:  unset;">
 
 
+<br clear="left"/>
+
 
 ## Install on Macos with brew: 
 ```bash
