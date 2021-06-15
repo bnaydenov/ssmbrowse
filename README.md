@@ -11,8 +11,6 @@
 Simple and elegant cli AWS SSM parameter browser.
 
 <img align="left" src="assets/ssmbrowse-logo-transparent.png" style="float:  unset;">
-
-
 <br clear="left"/>
 
 
@@ -39,3 +37,5 @@ If you already use this file for other SDKs and tools (like the AWS CLI), you do
 
  [More information how to configure credential check AWS docs here](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html)
 
+<img align="left" src="assets/demo-monokai1.gif" style="float:  unset;">
+<br clear="left"/>
