@@ -20,6 +20,12 @@ brew tap bnaydenov/ssmbrowse
 brew install ssmbrowse
 ```
 
+## Install on Linux and Windows 
+Download appropriate binary for your `OS` and `Arch` from release page.
+
+## AWS Credentials
+
+
 `ssmbrowse` uses AWS Golang SDK to access AWS. The AWS SDK for Go requires credentials (an access key and secret access key) to sign requests to AWS. You can specify your credentials in several different locations, depending on your particular use case. 
 
 The default provider chain looks for credentials in the following order:
@@ -52,3 +58,14 @@ To find specific params containing prefix simply type it into prefix to search f
 
 <img align="left" src="assets/demo-monokai1.gif" style="float:  unset;">
 <br clear="left"/>
+
+## How to build from source
+
+```bash
+# Clone the repo and then build binary
+# this create binary ssmbrowse in local folder
+make build
+
+# or build and run it with single command
+make run
+```
