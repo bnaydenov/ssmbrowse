@@ -37,5 +37,18 @@ If you already use this file for other SDKs and tools (like the AWS CLI), you do
 
  [More information how to configure credential check AWS docs here](https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html)
 
+ ## Demo 
+
+ ### Find all SSM params:
+ To find all params simply type `/` as param prefix to search for. 
+ 
+ 
+ By default is display first 30 results and if there is more params available will display them once you are move to last one with help of keyboard arrows.
+
+### Find only specific SSM params containing prefix:
+To find specific params containing prefix simply type it into prefix to search for. 
+
+
+
 <img align="left" src="assets/demo-monokai1.gif" style="float:  unset;">
 <br clear="left"/>
