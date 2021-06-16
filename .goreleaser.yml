@@ -1,0 +1,140 @@
+# This is an example .goreleaser.yml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+project_name: ssmbrowse
+
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+    # you may remove this if you don't need go generate
+    # - go generate ./...
+builds:
+  - 
+    id: default
+    env:
+      - CGO_ENABLED=0
+    # Custom ldflags templates.
+    # Default is `# Custom ldflags templates.
+    # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
+    ldflags:
+     - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
+    goos:
+      - linux
+      - windows
+      - darwin
+    # List of combinations of GOOS + GOARCH + GOARM to ignore.
+    # Default is empty.
+    ignore:
+      - goos: darwin
+        goarch: 386
+      - goos: linux
+        goarch: 386
+      - goos: windows
+        goarch: 386  
+archives:
+  - replacements:
+      darwin: macos
+      linux: linux
+      windows: windows
+      amd64: x86_64
+    # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
+    # If format is `binary`, no archives are created and the binaries are instead
+    # uploaded directly.
+    # Default is `tar.gz`.
+    format: zip
+
+    # Archive name template.
+    # Defaults:
+    # - if format is `tar.gz`, `tar.xz`, `gz` or `zip`:
+    #   - `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    # - if format is `binary`:
+    #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    # Additional files/template/globs you want to add to the archive.
+    # Defaults are any files matching `LICENCE*`, `LICENSE*`,
+    # `README*` and `CHANGELOG*` (case-insensitive).
+    files:
+      # - LICENSE.txt
+      # - README_{{.Os}}.md
+      # - CHANGELOG.md
+      # - docs/*
+      # - design/*.png
+      # - templates/**/*
+
+nfpms:
+  # note that this is an array of nfpm configs
+  -
+    # ID of the nfpm config, must be unique.
+    # Defaults to "default".
+    id: default
+
+    # Name of the package.
+    # Defaults to `ProjectName`.
+    package_name: ssmbrowse
+
+    # You can change the file name of the package.
+    # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+
+    # Build IDs for the builds you want to create NFPM packages for.
+    # Defaults to all builds.
+    builds:
+      - default
+
+    # Replacements for GOOS and GOARCH in the package name.
+    # Keys should be valid GOOSs or GOARCHs.
+    # Values are the respective replacements.
+    # Default is empty.
+    replacements:
+      amd64: 64bit
+      darwin: macos
+      linux: linux
+
+    # Your app's vendor.
+    # Default is empty.
+    vendor: Bogdan Naydenov
+    # Your app's homepage.
+    # Default is empty.
+    homepage: https://github.com/bnaydenov/ssmbrowse
+
+    # Your app's maintainer (probably you).
+    # Default is empty.
+    maintainer: Bogdan Naydenov <bnaydenov@gmail.com>
+
+    # Your app's description.
+    # Default is empty.
+    description: Simple and elegant cli AWS SSM parameter browser.
+
+    # Your app's license.
+    # Default is empty.
+    license: MIT
+
+    # Formats to be generated.
+    formats:
+      - apk
+      - deb
+      - rpm
+
+# Homebrew
+brews:
+  - name: ssmbrowse
+    license: "MIT"
+    tap:
+      owner: bnaydenov
+      name: homebrew-ssmbrowse
+    commit_author:
+      name: Bogdan Naydenov
+      email: bnaydenov@gmail.com
+    folder: Formula
+    homepage: https://github.com/bnaydenov/ssmbrowse
+    description: Simple and elegant cli AWS SSM parameter browser.
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
