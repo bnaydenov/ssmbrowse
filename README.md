@@ -54,7 +54,11 @@ If you already use this file for other SDKs and tools (like the AWS CLI), you do
 ### Find only specific SSM params containing prefix:
 To find specific params containing prefix simply type it into prefix to search for. 
 
-
+### Keyboard shortcuts:
+    - up/down arrows - navigate through the results
+    - ENTER - see param details 
+    - TAB - move between `Enter a param prefix:` and ssm param results details
+    - ESC/Ctrl+C - program exit
 
 <img align="left" src="assets/demo-monokai1.gif" style="float:  unset;">
 <br clear="left"/>
