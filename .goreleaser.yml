@@ -128,6 +128,7 @@ brews:
     folder: Formula
     homepage: https://github.com/bnaydenov/ssmbrowse
     description: Simple and elegant cli AWS SSM parameter browser.
+    skip_upload: auto
 checksum:
   name_template: 'checksums.txt'
 snapshot:
