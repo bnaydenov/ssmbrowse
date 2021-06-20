@@ -53,20 +53,29 @@ case $(uname -s) in
         ;;
 esac
 
-printf "Fetching latest version\n"
-latest="$(curl -sL 'https://api.github.com/repos/bnaydenov/ssmbrowse/releases/latest' | grep 'tag_name' | grep --only 'v[0-9\.]\+' | cut -c 2-)"
-tempFolder="/tmp/ssmbrowse_v${latest}"
+# exit if no unzip command found 
+if ! [ -x "$(command -v unzip)" ]; then
+    echo "unzip command could not be found, instalation can not proceed. "
+    exit 1
+fi
+
+printf "Fetching latest stable version\n"
+latest="$(curl -sL 'https://api.github.com/repos/bnaydenov/ssmbrowse/releases/latest' | grep 'tag_name' | grep --only 'v[0-9\.]\+' | cut -c 2- | awk -F  '-' '/1/ {print $1}')"
+tempFolder="/tmp/ssmbrowse-${latest}"
 
 printf -- "Found version %s\n" "${latest}"
-
+ 
 mkdir -p "${tempFolder}" 2> /dev/null
 printf -- "Downloading ssmbrowse_%s_%s_%s.zip\n" "${latest}" "${os}" "${machine}"
-curl -sL "https://github.com/profclems/bnaydenov/ssmbrowse/download/v${latest}/ssmbrowse_${latest}_${os}_${machine}.zip" | tar -C "${tempFolder}" -xzf -
 
-printf -- "Installing...\n"
-install -m755 "${tempFolder}/bin/ssmbrowse" "${BINDIR}/ssmbrowse"
+curl -sL --output ${tempFolder}/ssmbrowse.zip "https://github.com/bnaydenov/ssmbrowse/releases/download/v${latest}/ssmbrowse_${latest}_${os}_${machine}.zip"
+unzip -d ${tempFolder} ${tempFolder}/ssmbrowse.zip
 
-printf "Cleaning up temp files\n"
+
+printf -- "Installing ssmbrowse into ${BINDIR}\n"
+install -m755 "${tempFolder}/ssmbrowse" "${BINDIR}/ssmbrowse"
+
+printf "Cleaning up temp files ${tempFolder}\n"
 rm -rf "${tempFolder}"
 
 printf -- "Successfully installed ssmbrowse into %s/\n" "${BINDIR}"
