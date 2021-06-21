@@ -38,7 +38,20 @@ if ! _can_install; then
   exit 1
 fi
 
-machine=$(uname -m)
+# machine=$(uname -m)
+
+case $(uname -m) in
+    x86_64)
+       machine="x86_64"
+        ;;
+    aarch64)
+        machine="arm64"
+        ;;
+    *)
+        printf "Arch not supported\n"
+        exit 1
+        ;;
+esac
 
 case $(uname -s) in
     Linux)
