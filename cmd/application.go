@@ -97,11 +97,14 @@ func Entrypoint(buildData map[string]interface{}) {
 						// write/read text format data of the clipboard, and
                         // the byte buffer regarding the text are UTF8 encoded.
 						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",*selectedSSMParamDetails.Parameter.Name ), tview.AlignCenter, tcell.ColorDarkOrange)
+
 					// Copy SSM name to clipboard
 					case "x", "X":
 						// write/read text format data of the clipboard, and
                         // the byte buffer regarding the text are UTF8 encoded.
 						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParam.Name))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",*selectedSSMParam.Name), tview.AlignCenter, tcell.ColorDarkOrange)
 					}
 				}
 			}
