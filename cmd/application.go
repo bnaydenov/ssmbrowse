@@ -1,9 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/service/ssm"
+	awsutils "github.com/bnaydenov/ssmbrowse/internal/pkg/awsutils"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"golang.design/x/clipboard"
 )
 
 var (
@@ -74,14 +78,27 @@ func Entrypoint(buildData map[string]interface{}) {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
-		if ssmParamDetailsForm.HasFocus() {
+		if ssmTable.HasFocus() {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' {
-					// fmt.Println("c key is pressed")
+					selectedRow, selectedCol := ssmTable.GetSelection()
+					// fmt.Printf("c key is pressed on row:%d and col:%d", selectedRow, selectedCol)
+                    selectedSSMParam := ssmTable.GetCell(selectedRow, selectedCol).GetReference().(ssm.ParameterMetadata)
+		            selectedSSMParamDetails, err := awsutils.GetParameter(*selectedSSMParam.Name)
+		            if err != nil {
+		            	errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+		            	pages.SwitchToPage("error")
+		            }
+                    // write/read text format data of the clipboard, and
+                    // the byte buffer regarding the text are UTF8 encoded.
+                    clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
+                    // clipboard.Read(clipboard.FmtText)
+					// fmt.Printf("param value is: %s", *selectedSSMParamDetails.Parameter.Value)
 				}
 			}
 		}
+		
 		switch event.Key() {
 		case tcell.KeyEsc:
 			// Exit the application
