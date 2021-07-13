@@ -109,6 +109,12 @@ func Entrypoint(buildData map[string]interface{}) {
 		
 		switch event.Key() {
 		case tcell.KeyEsc:
+			if  ssmParamDetailsForm.HasFocus() {
+                ssmParamDetailsForm.Clear(false)
+                pages.SwitchToPage("main")
+                app.SetFocus(ssmTable)
+				return nil
+			}
 			// Exit the application
 			app.Stop()
 			return nil
