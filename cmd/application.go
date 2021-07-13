@@ -81,20 +81,28 @@ func Entrypoint(buildData map[string]interface{}) {
 		if ssmTable.HasFocus() {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
-				if key == 'c' {
+				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
+					
 					selectedRow, selectedCol := ssmTable.GetSelection()
-					// fmt.Printf("c key is pressed on row:%d and col:%d", selectedRow, selectedCol)
                     selectedSSMParam := ssmTable.GetCell(selectedRow, selectedCol).GetReference().(ssm.ParameterMetadata)
-		            selectedSSMParamDetails, err := awsutils.GetParameter(*selectedSSMParam.Name)
-		            if err != nil {
-		            	errorModal.SetText(fmt.Sprintf("%s", err.Error()))
-		            	pages.SwitchToPage("error")
-		            }
-                    // write/read text format data of the clipboard, and
-                    // the byte buffer regarding the text are UTF8 encoded.
-                    clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
-                    // clipboard.Read(clipboard.FmtText)
-					// fmt.Printf("param value is: %s", *selectedSSMParamDetails.Parameter.Value)
+
+                    switch string(key) {
+					// Copy SSM value to clipboard
+					case "c", "C":
+						selectedSSMParamDetails, err := awsutils.GetParameter(*selectedSSMParam.Name)
+                        if err != nil {
+                            errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+                            pages.SwitchToPage("error")
+                        }
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
+					// Copy SSM name to clipboard
+					case "x", "X":
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParam.Name))
+					}
 				}
 			}
 		}
