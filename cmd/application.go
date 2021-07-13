@@ -39,7 +39,7 @@ func Entrypoint(buildData map[string]interface{}) {
 	ssmSearchBox = createSsmSearchBox()
 
 	mainGrid = tview.NewGrid().
-		SetRows(1, 0, 1).
+		SetRows(1, 0, 2).
 		SetColumns(0)
 
 	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true).SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
@@ -50,7 +50,7 @@ func Entrypoint(buildData map[string]interface{}) {
 
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem, "ESC/CTRL+C=Exit | TAB=Switch focus | ENTER=See details", tview.AlignLeft, tcell.ColorWhite)
+	updateFooterItem(leftFooterItem, "ESC/CTRL+C=Exit | TAB=Switch focus | ENTER=See details \nC=Copy value to clipboard | X=Copy name to clipboard", tview.AlignLeft, tcell.ColorWhite)
 
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
