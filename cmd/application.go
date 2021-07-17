@@ -82,63 +82,63 @@ func Entrypoint(buildData map[string]interface{}) {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
-					
-					selectedRow, selectedCol := ssmTable.GetSelection()
-                    selectedSSMParam := ssmTable.GetCell(selectedRow, selectedCol).GetReference().(ssm.ParameterMetadata)
 
-                    switch string(key) {
+					selectedRow, selectedCol := ssmTable.GetSelection()
+					selectedSSMParam := ssmTable.GetCell(selectedRow, selectedCol).GetReference().(ssm.ParameterMetadata)
+
+					switch string(key) {
 					// Copy SSM value to clipboard
 					case "c", "C":
 						selectedSSMParamDetails, err := awsutils.GetParameter(*selectedSSMParam.Name)
-                        if err != nil {
-                            errorModal.SetText(fmt.Sprintf("%s", err.Error()))
-                            pages.SwitchToPage("error")
-                        }
+						if err != nil {
+							errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+							pages.SwitchToPage("error")
+						}
 						// write/read text format data of the clipboard, and
-                        // the byte buffer regarding the text are UTF8 encoded.
-						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
-						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",*selectedSSMParamDetails.Parameter.Name ), tview.AlignCenter, tcell.ColorDarkOrange)
+						// the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText, []byte(*selectedSSMParamDetails.Parameter.Value))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.", *selectedSSMParamDetails.Parameter.Name), tview.AlignCenter, tcell.ColorDarkOrange)
 
 					// Copy SSM name to clipboard
 					case "x", "X":
 						// write/read text format data of the clipboard, and
-                        // the byte buffer regarding the text are UTF8 encoded.
-						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParam.Name))
-						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",*selectedSSMParam.Name), tview.AlignCenter, tcell.ColorDarkOrange)
+						// the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText, []byte(*selectedSSMParam.Name))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.", *selectedSSMParam.Name), tview.AlignCenter, tcell.ColorDarkOrange)
 					}
 				}
 			}
 		}
-		
+
 		if ssmParamDetailsForm.HasFocus() {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
 				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
-                    switch string(key) {
+					switch string(key) {
 					// Copy SSM value to clipboard
 					case "c", "C":
 						ssmValue := ssmParamDetailsForm.GetFormItemByLabel("Value:").(*tview.InputField).GetText()
 						// write/read text format data of the clipboard, and
-                        // the byte buffer regarding the text are UTF8 encoded.
-						clipboard.Write(clipboard.FmtText,[]byte(ssmValue))
-						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",ssmParamDetailsForm.GetTitle()),tview.AlignCenter, tcell.ColorDarkOrange)
+						// the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText, []byte(ssmValue))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.", ssmParamDetailsForm.GetTitle()), tview.AlignCenter, tcell.ColorDarkOrange)
 					// Copy SSM name to clipboard
 					case "x", "X":
 						ssmName := ssmParamDetailsForm.GetTitle()
 						// write/read text format data of the clipboard, and
-                        // the byte buffer regarding the text are UTF8 encoded.
-						clipboard.Write(clipboard.FmtText,[]byte(ssmName))
-						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",ssmName), tview.AlignCenter, tcell.ColorDarkOrange)
+						// the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText, []byte(ssmName))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.", ssmName), tview.AlignCenter, tcell.ColorDarkOrange)
 					}
 				}
 			}
 		}
 		switch event.Key() {
 		case tcell.KeyEsc:
-			if  ssmParamDetailsForm.HasFocus() {
-                ssmParamDetailsForm.Clear(false)
-                pages.SwitchToPage("main")
-                app.SetFocus(ssmTable)
+			if ssmParamDetailsForm.HasFocus() {
+				ssmParamDetailsForm.Clear(false)
+				pages.SwitchToPage("main")
+				app.SetFocus(ssmTable)
 				return nil
 			}
 			// Exit the application
