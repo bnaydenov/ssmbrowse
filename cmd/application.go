@@ -1,9 +1,13 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/service/ssm"
+	awsutils "github.com/bnaydenov/ssmbrowse/internal/pkg/awsutils"
 	"github.com/gdamore/tcell/v2"
 	"github.com/rivo/tview"
+	"golang.design/x/clipboard"
 )
 
 var (
@@ -35,7 +39,7 @@ func Entrypoint(buildData map[string]interface{}) {
 	ssmSearchBox = createSsmSearchBox()
 
 	mainGrid = tview.NewGrid().
-		SetRows(1, 0, 1).
+		SetRows(1, 0, 2).
 		SetColumns(0)
 
 	mainGrid.AddItem(ssmSearchBox, 0, 0, 1, 3, 0, 0, true).SetBorder(true).SetBorderColor(tcell.ColorDarkOrange)
@@ -46,7 +50,7 @@ func Entrypoint(buildData map[string]interface{}) {
 
 	leftFooterItem = tview.NewTextView()
 	mainGrid.AddItem(leftFooterItem, 2, 0, 1, 1, 0, 0, false)
-	updateFooterItem(leftFooterItem, "ESC/CTRL+C=Exit | TAB=Switch focus | ENTER=See details", tview.AlignLeft, tcell.ColorWhite)
+	updateFooterItem(leftFooterItem, "ESC/CTRL+C=Exit | TAB=Switch focus | ENTER=See details \nC=Copy value to clipboard | X=Copy name to clipboard", tview.AlignLeft, tcell.ColorWhite)
 
 	centerFooterItem = tview.NewTextView()
 	mainGrid.AddItem(centerFooterItem, 2, 1, 1, 1, 0, 0, false)
@@ -74,16 +78,69 @@ func Entrypoint(buildData map[string]interface{}) {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		// Anything handled here will be executed on the main thread
+		if ssmTable.HasFocus() {
+			if event.Key() == tcell.KeyRune {
+				key := event.Rune()
+				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
+					
+					selectedRow, selectedCol := ssmTable.GetSelection()
+                    selectedSSMParam := ssmTable.GetCell(selectedRow, selectedCol).GetReference().(ssm.ParameterMetadata)
+
+                    switch string(key) {
+					// Copy SSM value to clipboard
+					case "c", "C":
+						selectedSSMParamDetails, err := awsutils.GetParameter(*selectedSSMParam.Name)
+                        if err != nil {
+                            errorModal.SetText(fmt.Sprintf("%s", err.Error()))
+                            pages.SwitchToPage("error")
+                        }
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParamDetails.Parameter.Value))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",*selectedSSMParamDetails.Parameter.Name ), tview.AlignCenter, tcell.ColorDarkOrange)
+
+					// Copy SSM name to clipboard
+					case "x", "X":
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(*selectedSSMParam.Name))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",*selectedSSMParam.Name), tview.AlignCenter, tcell.ColorDarkOrange)
+					}
+				}
+			}
+		}
+		
 		if ssmParamDetailsForm.HasFocus() {
 			if event.Key() == tcell.KeyRune {
 				key := event.Rune()
-				if key == 'c' {
-					// fmt.Println("c key is pressed")
+				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
+                    switch string(key) {
+					// Copy SSM value to clipboard
+					case "c", "C":
+						ssmValue := ssmParamDetailsForm.GetFormItemByLabel("Value:").(*tview.InputField).GetText()
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(ssmValue))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",ssmParamDetailsForm.GetTitle()),tview.AlignCenter, tcell.ColorDarkOrange)
+					// Copy SSM name to clipboard
+					case "x", "X":
+						ssmName := ssmParamDetailsForm.GetTitle()
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(ssmName))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",ssmName), tview.AlignCenter, tcell.ColorDarkOrange)
+					}
 				}
 			}
 		}
 		switch event.Key() {
 		case tcell.KeyEsc:
+			if  ssmParamDetailsForm.HasFocus() {
+                ssmParamDetailsForm.Clear(false)
+                pages.SwitchToPage("main")
+                app.SetFocus(ssmTable)
+				return nil
+			}
 			// Exit the application
 			app.Stop()
 			return nil

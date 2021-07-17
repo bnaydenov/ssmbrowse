@@ -21,6 +21,8 @@ func createSsmSearchBox() *tview.InputField {
 			foundParams = nil
 			nextToken = nil
 			if ssmTable != nil {
+				// clear center footer item
+				updateFooterItem(centerFooterItem, "", tview.AlignCenter, tcell.ColorDarkOrange)
 				ui.TruncTableRows(ssmTable, ssmTable.GetRowCount())
 				mainGrid.RemoveItem(ssmTable)
 			}
