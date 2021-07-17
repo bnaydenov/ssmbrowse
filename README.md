@@ -65,6 +65,8 @@ To find specific params containing prefix simply type it into prefix to search f
     - ENTER - see param details 
     - TAB - move between `Enter a param prefix:` and ssm param results details
     - ESC/Ctrl+C - program exit
+    - key 'C' - copy selected  SSM value to clipboard
+    - key 'X' - copy selected SSM name to clipboard
 
 <img align="left" src="assets/demo-monokai1.gif" style="float:  unset;">
 <br clear="left"/>
