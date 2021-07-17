@@ -110,6 +110,29 @@ func Entrypoint(buildData map[string]interface{}) {
 			}
 		}
 		
+		if ssmParamDetailsForm.HasFocus() {
+			if event.Key() == tcell.KeyRune {
+				key := event.Rune()
+				if key == 'c' || key == 'x' || key == 'C' || key == 'X' {
+                    switch string(key) {
+					// Copy SSM value to clipboard
+					case "c", "C":
+						ssmValue := ssmParamDetailsForm.GetFormItemByLabel("Value:").(*tview.InputField).GetText()
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(ssmValue))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("Value of '%s' is copied to clipboard.",ssmParamDetailsForm.GetTitle()),tview.AlignCenter, tcell.ColorDarkOrange)
+					// Copy SSM name to clipboard
+					case "x", "X":
+						ssmName := ssmParamDetailsForm.GetTitle()
+						// write/read text format data of the clipboard, and
+                        // the byte buffer regarding the text are UTF8 encoded.
+						clipboard.Write(clipboard.FmtText,[]byte(ssmName))
+						updateFooterItem(centerFooterItem, fmt.Sprintf("SSM name '%s' is copied to clipboard.",ssmName), tview.AlignCenter, tcell.ColorDarkOrange)
+					}
+				}
+			}
+		}
 		switch event.Key() {
 		case tcell.KeyEsc:
 			if  ssmParamDetailsForm.HasFocus() {
