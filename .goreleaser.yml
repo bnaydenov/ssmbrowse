@@ -19,7 +19,7 @@ builds:
     ldflags:
      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser
     goos:
-      - linux
+      # - linux
       - windows
       - darwin
     # List of combinations of GOOS + GOARCH + GOARM to ignore.
@@ -61,59 +61,59 @@ archives:
       # - design/*.png
       # - templates/**/*
 
-nfpms:
-  # note that this is an array of nfpm configs
-  -
-    # ID of the nfpm config, must be unique.
-    # Defaults to "default".
-    id: default
+# nfpms:
+#   # note that this is an array of nfpm configs
+#   -
+#     # ID of the nfpm config, must be unique.
+#     # Defaults to "default".
+#     id: default
 
-    # Name of the package.
-    # Defaults to `ProjectName`.
-    package_name: ssmbrowse
+#     # Name of the package.
+#     # Defaults to `ProjectName`.
+#     package_name: ssmbrowse
 
-    # You can change the file name of the package.
-    # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+#     # You can change the file name of the package.
+#     # Default: `{{ .PackageName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
+#     file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
 
-    # Build IDs for the builds you want to create NFPM packages for.
-    # Defaults to all builds.
-    builds:
-      - default
+#     # Build IDs for the builds you want to create NFPM packages for.
+#     # Defaults to all builds.
+#     builds:
+#       - default
 
-    # Replacements for GOOS and GOARCH in the package name.
-    # Keys should be valid GOOSs or GOARCHs.
-    # Values are the respective replacements.
-    # Default is empty.
-    replacements:
-      amd64: 64bit
-      darwin: macos
-      linux: linux
+#     # Replacements for GOOS and GOARCH in the package name.
+#     # Keys should be valid GOOSs or GOARCHs.
+#     # Values are the respective replacements.
+#     # Default is empty.
+#     replacements:
+#       amd64: 64bit
+#       darwin: macos
+#       linux: linux
 
-    # Your app's vendor.
-    # Default is empty.
-    vendor: Bogdan Naydenov
-    # Your app's homepage.
-    # Default is empty.
-    homepage: https://github.com/bnaydenov/ssmbrowse
+#     # Your app's vendor.
+#     # Default is empty.
+#     vendor: Bogdan Naydenov
+#     # Your app's homepage.
+#     # Default is empty.
+#     homepage: https://github.com/bnaydenov/ssmbrowse
 
-    # Your app's maintainer (probably you).
-    # Default is empty.
-    maintainer: Bogdan Naydenov <bnaydenov@gmail.com>
+#     # Your app's maintainer (probably you).
+#     # Default is empty.
+#     maintainer: Bogdan Naydenov <bnaydenov@gmail.com>
 
-    # Your app's description.
-    # Default is empty.
-    description: Simple and elegant cli AWS SSM parameter browser.
+#     # Your app's description.
+#     # Default is empty.
+#     description: Simple and elegant cli AWS SSM parameter browser.
 
-    # Your app's license.
-    # Default is empty.
-    license: MIT
+#     # Your app's license.
+#     # Default is empty.
+#     license: MIT
 
-    # Formats to be generated.
-    formats:
-      - apk
-      - deb
-      - rpm
+#     # Formats to be generated.
+#     formats:
+#       - apk
+#       - deb
+#       - rpm
 
 # Homebrew
 brews:
