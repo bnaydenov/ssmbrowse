@@ -13,3 +13,9 @@ run: build
 
 lint:
 	@gofmt -s -w .
+
+release:
+	@goreleaser release --rm-dist
+
+release-snapshot:
+	@goreleaser release --snapshot --rm-dist
