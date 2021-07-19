@@ -6,6 +6,7 @@ before:
   hooks:
     # You may remove this if you don't use go modules.
     - go mod tidy
+    - golang.design/x/clipboard
     # you may remove this if you don't need go generate
     # - go generate ./...
 builds:
