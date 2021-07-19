@@ -9,7 +9,7 @@ require (
 	github.com/pkg/errors v0.9.1
 	github.com/rivo/tview v0.0.0-20210312174852-ae9464cc3598
 	github.com/thoas/go-funk v0.8.0
-	golang.design/x/clipboard v0.4.6 // indirect
+	golang.design/x/clipboard v0.4.6
 	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
 	golang.org/x/term v0.0.0-20210406210042-72f3dc4e9b72 // indirect
 	golang.org/x/text v0.3.6 // indirect

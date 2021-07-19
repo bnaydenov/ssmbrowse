@@ -20,12 +20,10 @@ brew tap bnaydenov/ssmbrowse
 brew install ssmbrowse
 ```
 
-## Install on Linux and MacOs
+## Install on MacOs
 ```bash
 curl -s https://raw.githubusercontent.com/bnaydenov/ssmbrowse/master/scripts/install.sh | sh
 ```
-Or simply download appropriate zip file binary for  `OS` and `Arch` from release page. There is also built `deb` , `rpm` and `apk` packages for different Linux distributions and CPU architectures. 
-
 ## Install Windows
 Download appropriate binary for Windows `OS`  from release page.
 
