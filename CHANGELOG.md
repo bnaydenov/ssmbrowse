@@ -1,3 +1,7 @@
+## [v0.2.1] - 2023-06-02
+### Updates
+  - update modules 
+  - recompile with golang 1.20 
 ## [v0.2.0] - 2021-07-17
 ### Added 
    - Add functionality to copy selected ssm value to clipboard
