@@ -5,7 +5,6 @@ project_name: ssmbrowse
 before:
   hooks:
     # You may remove this if you don't use go modules.
-    - go version
     - go mod tidy
     # you may remove this if you don't need go generate
     # - go generate ./...
@@ -33,11 +32,12 @@ builds:
       - goos: windows
         goarch: 386  
 archives:
-  # - replacements:
-  #     darwin: macos
-  #     linux: linux
-  #     windows: windows
-  #     amd64: x86_64
+  - id: ssmbrowse
+    # replacements:
+    #   darwin: macos
+    #   linux: linux
+    #   windows: windows
+    #   amd64: x86_64
   #   # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
     # If format is `binary`, no archives are created and the binaries are instead
     # uploaded directly.
@@ -50,7 +50,7 @@ archives:
     #   - `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
     # - if format is `binary`:
     #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     # Additional files/template/globs you want to add to the archive.
     # Defaults are any files matching `LICENCE*`, `LICENSE*`,
     # `README*` and `CHANGELOG*` (case-insensitive).
