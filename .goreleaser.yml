@@ -5,6 +5,7 @@ project_name: ssmbrowse
 before:
   hooks:
     # You may remove this if you don't use go modules.
+    - go version
     - go mod tidy
     # you may remove this if you don't need go generate
     # - go generate ./...
@@ -32,12 +33,12 @@ builds:
       - goos: windows
         goarch: 386  
 archives:
-  - replacements:
-      darwin: macos
-      linux: linux
-      windows: windows
-      amd64: x86_64
-    # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
+  # - replacements:
+  #     darwin: macos
+  #     linux: linux
+  #     windows: windows
+  #     amd64: x86_64
+  #   # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
     # If format is `binary`, no archives are created and the binaries are instead
     # uploaded directly.
     # Default is `tar.gz`.
