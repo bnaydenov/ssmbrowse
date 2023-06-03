@@ -11,8 +11,8 @@ before:
 builds:
   - 
     id: default
-    env:
-      - CGO_ENABLED=1
+    # env:
+    #   - CGO_ENABLED=1
     # Custom ldflags templates.
     # Default is `# Custom ldflags templates.
     # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
@@ -32,12 +32,13 @@ builds:
       - goos: windows
         goarch: 386  
 archives:
-  - replacements:
-      darwin: macos
-      linux: linux
-      windows: windows
-      amd64: x86_64
-    # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
+  - id: ssmbrowse
+    # replacements:
+    #   darwin: macos
+    #   linux: linux
+    #   windows: windows
+    #   amd64: x86_64
+  #   # Archive format. Valid options are `tar.gz`, `tar.xz`, `gz`, `zip` and `binary`.
     # If format is `binary`, no archives are created and the binaries are instead
     # uploaded directly.
     # Default is `tar.gz`.
@@ -49,7 +50,7 @@ archives:
     #   - `{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
     # - if format is `binary`:
     #   - `{{ .Binary }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}{{ if .Mips }}_{{ .Mips }}{{ end }}`
-    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    name_template: '{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
     # Additional files/template/globs you want to add to the archive.
     # Defaults are any files matching `LICENCE*`, `LICENSE*`,
     # `README*` and `CHANGELOG*` (case-insensitive).

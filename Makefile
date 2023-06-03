@@ -15,7 +15,7 @@ lint:
 	@gofmt -s -w .
 
 release:
-	@goreleaser release --rm-dist
+	@goreleaser release --clean
 
 release-snapshot:
-	@goreleaser release --snapshot --rm-dist
+	@goreleaser release --snapshot --clean
