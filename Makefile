@@ -3,7 +3,7 @@ CURRENT_DATETIME := $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 VERSION ?= "dev"
 
 build:
-	@go build  \
+	@CGO_ENABLED=1 go build  \
 		-ldflags "-X main.version=$(VERSION) -X main.date=$(CURRENT_DATETIME)" \
 		-o $(BINARY_NAME) *.go
 	

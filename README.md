@@ -79,3 +79,12 @@ make build
 # or build and run it with single command
 make run
 ```
+
+
+## How to release a package
+
+Due to current limitation of  `goreleaser` to properly use `CGO_ENABLED=1` check here [https://goreleaser.com/limitations/cgo/](https://goreleaser.com/limitations/cgo/) the release process which creates packages and updates homebrew tap `bnaydenov/ssmbrowse` should be executed from MAC OS with this command.
+
+```bash
+GITHUB_TOKEN={your_github_token_here} make release
+```

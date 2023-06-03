@@ -1,3 +1,6 @@
+## [v0.2.2] - 2023-06-04
+### Fix
+  - return CGO_ENABLED=1  when build
 ## [v0.2.1] - 2023-06-02
 ### Updates
   - update modules 
